@@ -1,0 +1,62 @@
+1
+Hi
+1;Zoe;Zoe;Hi! My name's Zoe!
+--
+2:Nice to meet you.  What do you do here?
+3:What's the name of this town?
+4:What's there to do here?
+5:Anywhere to buy things?
+6:Any dangers?
+7:Goodbye
+----
+2
+Who
+1;Zoe;Zoe;I'm the town crier! I cry out what's going on.
+--
+3:What's the name of this town?
+4:What's there to do here?
+5:Anywhere to buy things?
+6:Any dangers?
+7:Goodbye
+----
+3
+Town
+1;Zoe;Zoe;This town is called Townville!  Original name huh?
+--
+4:What's there to do here?
+5:Anywhere to buy things?
+6:Any dangers?
+7:Goodbye
+----
+4
+Stuff
+1;Zoe;Zoe;There's plenty of things to do in Townville. You can buy and sell stuff, kill rats in the ally, or talk to me!
+--
+3:What's the name of this town?
+5:Anywhere to buy things?
+6:Any dangers?
+7:Goodbye
+----
+5
+Buy
+1;Zoe;Zoe;Yep, you can buy and sell goods at the blacksmith.  He's right down the way
+--
+3:What's the name of this town?
+4:What's there to do here?
+6:Any dangers?
+7:Goodbye
+----
+6
+Danger
+1;Zoe;Zoe;Well, the alley has been infested with rats for as long as I can remember.
+--
+3:What's the name of this town?
+4:What's there to do here?
+5:Anywhere to buy things?
+7:Goodbye
+----
+7
+Goodbye
+1;Zoe;Zoe;See ya!
+--
+----

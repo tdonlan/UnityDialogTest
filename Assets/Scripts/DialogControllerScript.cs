@@ -1,0 +1,142 @@
+﻿using UnityEngine;
+using UnityEngine.UI;
+
+using System.Collections;
+using System.Collections.Generic;
+
+public class DialogControllerScript : MonoBehaviour {
+
+    public TreeStore treeStore{get;set;}
+	public DialogTree dialogTree { get; set; }
+
+    public GameObject speakerBox { get; set; }
+    public GameObject speakerName { get; set; }
+    public GameObject speakerPortrait { get; set; }
+    public GameObject responsePanel { get; set; }
+
+    public GameObject responseButtonPrefab { get; set; }
+
+    private List<GameObject> responseButtonList = new List<GameObject>();
+
+	// Use this for initialization
+	void Start () {
+        loadPrefabs();
+        LoadTreeStore();
+
+        updateDisplay();
+	}
+
+    private void loadPrefabs()
+    {
+        responsePanel = GameObject.FindGameObjectWithTag("ResponsePanel");
+        speakerBox = GameObject.FindGameObjectWithTag("SpeakerText");
+        speakerName = GameObject.FindGameObjectWithTag("SpeakerName");
+        speakerPortrait = GameObject.FindGameObjectWithTag("SpeakerPortrait");
+        responseButtonPrefab = (GameObject)Resources.Load<GameObject>("Prefabs/ResponseButtonPrefab");
+
+    }
+
+    public void ClickResponseButton(long linkIndex)
+    {
+        dialogTree.SelectNode(linkIndex);
+        updateDisplay();
+    }
+
+    private void LoadTreeStore()
+    {
+      
+        TextAsset zoeDialogTextAsset =  Resources.Load<TextAsset>("SimpleWorld1/DialogZoe");
+
+        dialogTree = (DialogTree)SimpleTreeParser.getTreeFromString(zoeDialogTextAsset.text, TreeType.Dialog, new GlobalFlags());
+       
+    }
+
+    //called when the dialog first loads, or the user clicks a link
+    private void updateDisplay()
+    {
+        DialogTreeNode currentNode = (DialogTreeNode)dialogTree.getNode(dialogTree.currentIndex);
+        updateSpeakerBlock(currentNode);
+        updateResponseBlock(currentNode);
+
+    }
+
+    private void updateSpeakerBlock(DialogTreeNode currentNode)
+    {
+        var speakerBoxText = speakerBox.GetComponent<Text>();
+        speakerBoxText.text = currentNode.content.text;
+
+        var speakerNameText = speakerName.GetComponent<Text>();
+        speakerNameText.text = currentNode.content.speaker;
+
+        var speakerPortraitImg = speakerPortrait.GetComponent<Image>();
+
+        var speakerSprite = Resources.Load<Sprite>("Portraits/" + currentNode.content.portrait);
+
+        speakerPortraitImg.sprite = speakerSprite;
+
+    }
+
+    
+
+    private void updateResponseBlock(DialogTreeNode currentNode)
+    {
+        clearResponsePanel();
+        foreach (var branch in currentNode.getBranchList(dialogTree))
+        {
+           GameObject responseButton =  createResponseButton(branch);
+            responseButtonList.Add(responseButton);
+        }
+        GameObject endDialogButton = createEndDialogButton();
+        responseButtonList.Add(endDialogButton);
+    }
+
+    private GameObject createResponseButton(TreeBranch branch)
+    {
+        GameObject responseButton = Instantiate(responseButtonPrefab);
+
+        var responseButtonText = (Text)responseButton.GetComponent<Text>();
+        responseButtonText.text = branch.description;
+
+        var button = (Button)responseButton.GetComponent<Button>();
+        button.onClick.AddListener(() => ClickResponseButton(branch.linkIndex));
+        responseButton.transform.SetParent(responsePanel.transform);
+        return responseButton;
+    }
+
+    private GameObject createEndDialogButton()
+    {
+        GameObject responseButton = Instantiate(responseButtonPrefab);
+
+        var responseButtonText = (Text)responseButton.GetComponent<Text>();
+        responseButtonText.text = "End conversation";
+
+        var button = (Button)responseButton.GetComponent<Button>();
+        button.onClick.AddListener(() => EndDialog());
+        responseButton.transform.SetParent(responsePanel.transform);
+        return responseButton;
+    }
+
+    private void clearResponsePanel()
+    {
+        foreach(var rButton in responseButtonList)
+        {
+            Destroy(rButton);
+        }
+        responseButtonList.Clear();
+
+    }
+
+    public void EndDialog()
+    {
+        //how do we know how we linked in to dialog?
+        //go back to the zone view
+        Application.LoadLevel(2);
+
+    }
+    
+	
+	// Update is called once per frame
+	void Update () {
+		
+	}
+}
