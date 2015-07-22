@@ -16,6 +16,8 @@ public class DialogControllerScript : MonoBehaviour {
     public GameObject speakerPortrait { get; set; }
     public GameObject responsePanel { get; set; }
 
+    public Text debugText { get; set; }
+
     public GameObject responseButtonPrefab { get; set; }
 
     private List<GameObject> responseButtonList = new List<GameObject>();
@@ -52,6 +54,8 @@ public class DialogControllerScript : MonoBehaviour {
         speakerPortrait = GameObject.FindGameObjectWithTag("SpeakerPortrait");
         responseButtonPrefab = (GameObject)Resources.Load<GameObject>("Prefabs/ResponseButtonPrefab");
 
+        debugText = GameObject.FindGameObjectWithTag("DebugText").GetComponent<Text>();
+
     }
 
     private void LoadTreeStore()
@@ -59,11 +63,6 @@ public class DialogControllerScript : MonoBehaviour {
 
         gameDataObject.treeStore.SelectTree(2);
         dialogTree = (DialogTree)gameDataObject.treeStore.getCurrentTree();
-
-        /*
-        TextAsset zoeDialogTextAsset =  Resources.Load<TextAsset>("SimpleWorld1/DialogZoe");
-        dialogTree = (DialogTree)SimpleTreeParser.getTreeFromString(zoeDialogTextAsset.text, TreeType.Dialog, new GlobalFlags());
-        */
     }
 
     public void ClickResponseButton(long linkIndex)
@@ -106,6 +105,7 @@ public class DialogControllerScript : MonoBehaviour {
         {
            GameObject responseButton =  createResponseButton(branch);
             responseButtonList.Add(responseButton);
+            
         }
         GameObject endDialogButton = createEndDialogButton();
         responseButtonList.Add(endDialogButton);
@@ -120,7 +120,8 @@ public class DialogControllerScript : MonoBehaviour {
 
         var button = (Button)responseButton.GetComponent<Button>();
         button.onClick.AddListener(() => ClickResponseButton(branch.linkIndex));
-        responseButton.transform.SetParent(responsePanel.transform);
+
+        responseButton.transform.SetParent(responsePanel.transform,false);
         return responseButton;
     }
 
