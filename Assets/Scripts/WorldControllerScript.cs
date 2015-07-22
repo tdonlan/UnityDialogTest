@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public class WorldControllerScript : MonoBehaviour {
 
+    public GameDataObject gameDataObject { get; set; } 
+
     public TreeStore treeStore { get; set; }
     public WorldTree worldTree { get; set; }
 
@@ -20,17 +22,40 @@ public class WorldControllerScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+       
+	}
+
+    void OnLevelWasLoaded(int level)
+    {
+        loadGameData();
+
+        initScene();
+    }
+
+    private void initScene()
+    {
         initPrefabs();
         loadTree();
         setNavigation();
-	}
+    }
+
+
+
+    private void loadGameData()
+    {
+        gameDataObject = GameObject.FindObjectOfType<GameDataObject>();
+        
+    }
 
     private void loadTree()
     {
-
+        int worldIndex = 0; //need to retrieve this from the treeStroe
+        gameDataObject.treeStore.SelectTree(worldIndex);
+        worldTree = (WorldTree)gameDataObject.treeStore.getCurrentTree();
+        /*
         TextAsset worldTextAsset = Resources.Load<TextAsset>("SimpleWorld1/World1");
         worldTree = (WorldTree)SimpleTreeParser.getTreeFromString(worldTextAsset.text, TreeType.World, new GlobalFlags());
-       
+         * */
     }
 
     private void initPrefabs()

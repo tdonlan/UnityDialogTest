@@ -1,0 +1,3 @@
+SimpleWorld1/World1;0;World;0
+SimpleWorld1/ZoneTown;1;ZoneTown;1
+SimpleWorld1/DialogZoe;2;DialogZoe;2

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public class ZoneControllerScript : MonoBehaviour {
 
+    public GameDataObject gameDataObject { get; set; } 
+
     public TreeStore treeStore { get; set; }
     public ZoneTree zoneTree { get; set; }
 
@@ -21,17 +23,37 @@ public class ZoneControllerScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+       
+	}
+
+    void OnLevelWasLoaded(int level)
+    {
+        loadGameData();
+        initScene();
+    }
+
+    private void loadGameData()
+    {
+        gameDataObject = GameObject.FindObjectOfType<GameDataObject>();
+    }
+
+    private void initScene()
+    {
         initPrefabs();
         loadTree();
         setZoneNodes();
-	}
+    }
+
 
     private void loadTree()
     {
+        gameDataObject.treeStore.SelectTree(1);
+        zoneTree = (ZoneTree)gameDataObject.treeStore.getCurrentTree();
 
+        /*(
         TextAsset zoneTextAsset = Resources.Load<TextAsset>("SimpleWorld1/ZoneTown");
         zoneTree = (ZoneTree)SimpleTreeParser.getTreeFromString(zoneTextAsset.text, TreeType.Zone, new GlobalFlags());
-
+        */
     }
 
 

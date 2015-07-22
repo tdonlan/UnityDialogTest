@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 public class DialogControllerScript : MonoBehaviour {
 
+    public GameDataObject gameDataObject { get; set; } 
+
     public TreeStore treeStore{get;set;}
 	public DialogTree dialogTree { get; set; }
 
@@ -20,11 +22,27 @@ public class DialogControllerScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+     
+	}
+
+    void OnLevelWasLoaded(int level)
+    {
+        loadGameData();
+        initScene();
+    }
+
+    private void loadGameData()
+    {
+        gameDataObject = GameObject.FindObjectOfType<GameDataObject>();
+    }
+
+    private void initScene()
+    {
         loadPrefabs();
         LoadTreeStore();
 
         updateDisplay();
-	}
+    }
 
     private void loadPrefabs()
     {
@@ -36,19 +54,22 @@ public class DialogControllerScript : MonoBehaviour {
 
     }
 
+    private void LoadTreeStore()
+    {
+
+        gameDataObject.treeStore.SelectTree(2);
+        dialogTree = (DialogTree)gameDataObject.treeStore.getCurrentTree();
+
+        /*
+        TextAsset zoeDialogTextAsset =  Resources.Load<TextAsset>("SimpleWorld1/DialogZoe");
+        dialogTree = (DialogTree)SimpleTreeParser.getTreeFromString(zoeDialogTextAsset.text, TreeType.Dialog, new GlobalFlags());
+        */
+    }
+
     public void ClickResponseButton(long linkIndex)
     {
         dialogTree.SelectNode(linkIndex);
         updateDisplay();
-    }
-
-    private void LoadTreeStore()
-    {
-      
-        TextAsset zoeDialogTextAsset =  Resources.Load<TextAsset>("SimpleWorld1/DialogZoe");
-
-        dialogTree = (DialogTree)SimpleTreeParser.getTreeFromString(zoeDialogTextAsset.text, TreeType.Dialog, new GlobalFlags());
-       
     }
 
     //called when the dialog first loads, or the user clicks a link

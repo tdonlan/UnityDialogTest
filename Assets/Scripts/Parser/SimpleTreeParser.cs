@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
+using UnityEditor;
+using UnityEngine;
+
 
     public class SimpleTreeParser
     {
@@ -17,13 +20,37 @@ using System.IO;
             string manifestStr = File.ReadAllText(manifest);
 
             var manifestJSON = SimpleJson.SimpleJson.DeserializeObject<List<TreeManifestItem>>(manifestStr);
-            //var manifestJSON = JsonConvert.DeserializeObject<List<TreeManifestItem>>(manifestStr);
 
             foreach (var treeItem in manifestJSON)
             {
                 string path = ParseHelper.getFullPath(manifest, treeItem.treePath);
                 ITree tempTree = SimpleTreeParser.getTreeFromFile(path, treeItem.treeType, gf);
                 ts.treeDictionary.Add(treeItem.treeIndex, tempTree);
+            }
+
+            return ts;
+        }
+
+        
+        //Load the tree store from a simple file list (not json)
+        public static TreeStore LoadTreeStoreFromSimpleManifest(string manifestSimple)
+        {
+            
+            TreeStore ts = new TreeStore();
+
+            GlobalFlags gf = new GlobalFlags();
+
+            string[] lineArray = manifestSimple.Split(new string[]{Environment.NewLine},StringSplitOptions.None);
+
+            foreach (var line in lineArray.ToList<String>())
+            {
+                string[] treeArray = line.Split(';');
+
+                TextAsset treeText = Resources.Load<TextAsset>(treeArray[0]);
+
+                ITree tempTree = SimpleTreeParser.getTreeFromString(treeText.text, (TreeType)Int32.Parse(treeArray[1]), gf);
+                tempTree.treeName = treeArray[2];
+                ts.treeDictionary.Add(Int32.Parse(treeArray[3]), tempTree);
             }
 
             return ts;
