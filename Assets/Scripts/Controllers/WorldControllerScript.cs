@@ -52,10 +52,7 @@ public class WorldControllerScript : MonoBehaviour {
         int worldIndex = 0; //need to retrieve this from the treeStroe
         gameDataObject.treeStore.SelectTree(worldIndex);
         worldTree = (WorldTree)gameDataObject.treeStore.getCurrentTree();
-        /*
-        TextAsset worldTextAsset = Resources.Load<TextAsset>("SimpleWorld1/World1");
-        worldTree = (WorldTree)SimpleTreeParser.getTreeFromString(worldTextAsset.text, TreeType.World, new GlobalFlags());
-         * */
+
     }
 
     private void initPrefabs()
@@ -132,7 +129,8 @@ public class WorldControllerScript : MonoBehaviour {
     //entering the zone / switching scenes
     public void ClickEnterZoneButton(long linkIndex){
         //switch scenes to the zone index
-        Application.LoadLevel(2);
+        //Application.LoadLevel(2); //old zone scene
+        Application.LoadLevel(4); //tiled zone scene
     }
 	
 

@@ -151,8 +151,13 @@ public class DialogControllerScript : MonoBehaviour {
     public void EndDialog()
     {
         //how do we know how we linked in to dialog?
+        
+        //reset dialog
+        dialogTree.SelectNode(1);
+        
         //go back to the zone view
-        Application.LoadLevel(2);
+       
+        Application.LoadLevel(4);
 
     }
     

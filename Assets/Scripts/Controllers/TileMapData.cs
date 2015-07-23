@@ -6,13 +6,8 @@ using UnityEngine;
 
 namespace Assets
 {
-
-    
-
     public class TileMapData
     {
-       
-
         public List<Bounds> collisionBoundsList = new List<Bounds>();
         public Bounds spawnBounds;
         public List<Bounds> objectBounds = new List<Bounds>();
@@ -21,9 +16,10 @@ namespace Assets
 
         public TileMapData(GameObject tileMapGameObject)
         {
-            loadSpawn(tileMapGameObject);
+          
             loadCollisionRectListFromPrefab(tileMapGameObject);
             loadObjectBounds(tileMapGameObject);
+            loadSpawn(tileMapGameObject);
             loadObjectStringList();
         }
 
@@ -46,8 +42,15 @@ namespace Assets
 
         private void loadSpawn(GameObject tileMapGameObject)
         {
+            //for now, default to the first object as the spawn point
+            if (objectBounds.Count > 0)
+            {
+                spawnBounds = objectBounds[0];
+            }
+            /*
             Transform spawnChild = tileMapGameObject.transform.FindChild("spawn");
             spawnBounds = spawnChild.GetComponentsInChildren<BoxCollider2D>().FirstOrDefault().bounds;
+             */
         }
 
         private void loadCollisionRectListFromPrefab(GameObject tileMapGameObject)
@@ -72,16 +75,16 @@ namespace Assets
             return false;
         }
 
-        public string checkObjectCollision(Bounds testBounds)
+        public int checkObjectCollision(Bounds testBounds)
         {
             for(int i=0;i<objectBounds.Count;i++)
             {
                 if (objectBounds[i].Intersects(testBounds))
                 {
-                    return objectStrings[i];
+                    return i;
                 }
             }
-            return null;
+            return -1;
         }
 
     }
