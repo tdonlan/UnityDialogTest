@@ -11,7 +11,8 @@ public class TileSceneControllerScript : MonoBehaviour {
 
     public GameDataObject gameDataObject { get; set; }
     public ZoneTree zoneTree { get; set; }
-    private ZoneTreeNode currentNode; 
+    private ZoneTreeNode currentNode;
+    private long currentNodeIndex;
 
     public TileMapData tileMapData;
 
@@ -84,7 +85,7 @@ public class TileSceneControllerScript : MonoBehaviour {
 
     private void setPlayerStart()
     {
-        player.transform.position = tileMapData.spawnBounds.center;
+        player.transform.position = tileMapData.getSpawnPoint((int)zoneTree.currentIndex-1).center;
     }
     
 	
@@ -132,11 +133,11 @@ public class TileSceneControllerScript : MonoBehaviour {
     {
         if (tileMapData != null)
         {
-            int objectIndex = tileMapData.checkObjectCollision(playerBounds);
-            if(objectIndex >= 0)
+            currentNodeIndex = tileMapData.checkObjectCollision(playerBounds) + 1;
+            if (currentNodeIndex > 0)
             {
                 //check condition here
-                if (zoneTree.treeNodeDictionary.TryGetValue(objectIndex + 1, out currentNode))
+                if (zoneTree.treeNodeDictionary.TryGetValue(currentNodeIndex, out currentNode))
                 {
                     panelText.text = currentNode.content.nodeName + " " + currentNode.content.description;
                     panelButton.enabled = true;
@@ -155,6 +156,7 @@ public class TileSceneControllerScript : MonoBehaviour {
     
     public void ZoneNodeButtonClick()
     {
+        zoneTree.SelectNode(currentNodeIndex);
         switch (currentNode.content.nodeType)
         {
             case ZoneNodeType.Link:
@@ -175,6 +177,7 @@ public class TileSceneControllerScript : MonoBehaviour {
 
     private void ClickLinkNode(long linkIndex)
     {
+        
         Application.LoadLevel(1);
     }
 

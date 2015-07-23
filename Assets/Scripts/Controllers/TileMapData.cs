@@ -53,6 +53,19 @@ namespace Assets
              */
         }
 
+        //spawn point is the current node location we are on, or defaults to object 1
+        public Bounds getSpawnPoint(int objectIndex)
+        {
+            if(objectBounds.Count > objectIndex){
+                return objectBounds[objectIndex];
+            }
+            else
+            {
+                return objectBounds[0];
+            }
+           
+        }
+
         private void loadCollisionRectListFromPrefab(GameObject tileMapGameObject)
         {
             Transform collisionChild = tileMapGameObject.transform.FindChild("collision");
