@@ -6,9 +6,9 @@ using System.Collections.Generic;
 
 public class DialogControllerScript : MonoBehaviour {
 
-    public GameDataObject gameDataObject { get; set; } 
+    public GameDataObject gameDataObject { get; set; }
 
-    public TreeStore treeStore{get;set;}
+    public long parentTreeLink;
 	public DialogTree dialogTree { get; set; }
 
     public GameObject speakerBox { get; set; }
@@ -58,12 +58,24 @@ public class DialogControllerScript : MonoBehaviour {
 
     }
 
+    //get the link to the dialog from current zone node content
+    //save the parent tree link from tree store
+    //switch to the dialog tree
     private void LoadTreeStore()
     {
+        //dont select tree, get the tree node from current zone content
 
-        gameDataObject.treeStore.SelectTree(2);
+        //assuming the parent is a zone type for now
+        ZoneTree parentTree = (ZoneTree)gameDataObject.treeStore.getCurrentTree();
+        ZoneTreeNode parentTreeNode = (ZoneTreeNode)parentTree.getNode(parentTree.currentIndex);
+        long dialogLink = parentTreeNode.content.linkIndex;
+
+        parentTreeLink = gameDataObject.treeStore.currentTreeIndex;
+
+        gameDataObject.treeStore.SelectTree(dialogLink);
         dialogTree = (DialogTree)gameDataObject.treeStore.getCurrentTree();
     }
+
 
     public void ClickResponseButton(long linkIndex)
     {
@@ -150,15 +162,15 @@ public class DialogControllerScript : MonoBehaviour {
 
     public void EndDialog()
     {
-        //how do we know how we linked in to dialog?
         
         //reset dialog
         dialogTree.SelectNode(1);
+
+        //switch back to parent tree link
+        gameDataObject.treeStore.SelectTree(parentTreeLink);
         
         //go back to the zone view
-       
         Application.LoadLevel(4);
-
     }
     
 	

@@ -10,11 +10,16 @@ using Assets;
 public class TileSceneControllerScript : MonoBehaviour {
 
     public GameDataObject gameDataObject { get; set; }
+
+    public GameObject tileMapPrefab;
+    public GameObject tileMapObject;
+    public TileMapData tileMapData;
+    
+
     public ZoneTree zoneTree { get; set; }
     private ZoneTreeNode currentNode;
     private long currentNodeIndex;
 
-    public TileMapData tileMapData;
 
     public string debugTextString;
     public Text debugText;
@@ -48,15 +53,15 @@ public class TileSceneControllerScript : MonoBehaviour {
     {
         initPrefabs();
         loadTree();
+        loadTileMap();
         loadTileMapData();
         setPlayerStart();
     }
 
     private void loadTree()
     {
-        gameDataObject.treeStore.SelectTree(1);
+        //gameDataObject.treeStore.SelectTree(1);
         zoneTree = (ZoneTree)gameDataObject.treeStore.getCurrentTree();
-       
     }
 
     private void initPrefabs()
@@ -70,10 +75,18 @@ public class TileSceneControllerScript : MonoBehaviour {
         spritePrefab = Resources.Load<GameObject>("Prefabs/SpritePrefab");
     }
 
+    private void loadTileMap()
+    {
+        //get name of prefab of this map - match same name of tree?
+        tileMapPrefab = Resources.Load<GameObject>(zoneTree.treeName);
+        tileMapObject = (GameObject)Instantiate(tileMapPrefab);
+        tileMapPrefab.tag = "tileMap";
+    }
+
     private void loadTileMapData()
     {
         string outStr = "";
-        var tileMapObject = GameObject.FindGameObjectWithTag("tileMap");
+        //var tileMapObject = GameObject.FindGameObjectWithTag("tileMap");
         tileMapData = new TileMapData(tileMapObject);
         foreach (var b in tileMapData.collisionBoundsList)
         {
@@ -177,8 +190,15 @@ public class TileSceneControllerScript : MonoBehaviour {
 
     private void ClickLinkNode(long linkIndex)
     {
-        
-        Application.LoadLevel(1);
+        gameDataObject.treeStore.SelectTree(linkIndex);
+        if (gameDataObject.treeStore.getCurrentTree() is WorldTree)
+        {
+            Application.LoadLevel(1);
+        }
+        else
+        {
+            Application.LoadLevel(4);
+        }
     }
 
     private void ClickDialogNode(long dialogIndex)

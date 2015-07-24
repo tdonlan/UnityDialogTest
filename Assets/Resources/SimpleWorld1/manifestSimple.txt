@@ -1,3 +1,6 @@
 SimpleWorld1/World1;0;World;0
 SimpleWorld1/ZoneTown;1;ZoneTown;1
 SimpleWorld1/DialogZoe;2;DialogZoe;2
+SimpleWorld1/ZoneForest1;1;ZoneForest1;3
+SimpleWorld1/ZoneForest2;1;ZoneForest2;4
+SimpleWorld1/DialogHermit;2;DialogHermit;5

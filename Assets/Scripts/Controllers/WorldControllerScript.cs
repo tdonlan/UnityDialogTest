@@ -7,7 +7,6 @@ public class WorldControllerScript : MonoBehaviour {
 
     public GameDataObject gameDataObject { get; set; } 
 
-    public TreeStore treeStore { get; set; }
     public WorldTree worldTree { get; set; }
 
     public GameObject worldButtonPrefab { get; set; }
@@ -130,6 +129,7 @@ public class WorldControllerScript : MonoBehaviour {
     public void ClickEnterZoneButton(long linkIndex){
         //switch scenes to the zone index
         //Application.LoadLevel(2); //old zone scene
+        gameDataObject.treeStore.SelectTree(linkIndex);
         Application.LoadLevel(4); //tiled zone scene
     }
 	

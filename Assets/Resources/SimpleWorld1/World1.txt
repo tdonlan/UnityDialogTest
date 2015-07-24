@@ -6,7 +6,7 @@ Town
 ----
 2
 Forest
-99;ZoneForest;A dark and forboding forest full of ancient trees;Forest;0;0
+3;ZoneForest;A dark and forboding forest full of ancient trees;Forest;0;0
 --
 1:Town
 3:Desert
