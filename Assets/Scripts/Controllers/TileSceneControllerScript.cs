@@ -13,8 +13,11 @@ public class TileSceneControllerScript : MonoBehaviour {
 
     public GameObject tileMapPrefab;
     public GameObject tileMapObject;
+
+    public GameObject tileSelectPrefab;
+    public GameObject tileSelectSprite;
+
     public TileMapData tileMapData;
-    
 
     public ZoneTree zoneTree { get; set; }
     private ZoneTreeNode currentNode;
@@ -28,9 +31,18 @@ public class TileSceneControllerScript : MonoBehaviour {
     public Button panelButton;
 
     public GameObject player;
+    public PlayerControllerScript playerScript;
 
     public GameObject spritePrefab;
     public List<GameObject> boundingSpriteList = new List<UnityEngine.GameObject>();
+
+    Camera mainCamera;
+
+    Point mouseTilePoint;
+    List<Point> movePath = new List<Point>();
+
+    public float moveTimer;
+    public float moveTime = .1f;
 
 	void Start () {
      
@@ -56,6 +68,9 @@ public class TileSceneControllerScript : MonoBehaviour {
         loadTileMap();
         loadTileMapData();
         setPlayerStart();
+
+        //testing
+        TestDisplayTileArray();
     }
 
     private void loadTree()
@@ -66,11 +81,17 @@ public class TileSceneControllerScript : MonoBehaviour {
 
     private void initPrefabs()
     {
+        mainCamera = GameObject.FindObjectOfType<Camera>().GetComponent<Camera>();
+
         player = GameObject.FindGameObjectWithTag("Player");
+        playerScript = player.GetComponent<PlayerControllerScript>();
         debugText = GameObject.FindGameObjectWithTag("debugText").GetComponent<Text>();
         debugText2 = GameObject.FindGameObjectWithTag("debugText2").GetComponent<Text>();
         panelText = GameObject.FindGameObjectWithTag("PanelText").GetComponent<Text>();
         panelButton = GameObject.FindGameObjectWithTag("PanelButton").GetComponent<Button>();
+        
+        
+        tileSelectPrefab = Resources.Load<GameObject>("Prefabs/TileSelectPrefab");
 
         spritePrefab = Resources.Load<GameObject>("Prefabs/SpritePrefab");
     }
@@ -93,7 +114,25 @@ public class TileSceneControllerScript : MonoBehaviour {
             outStr += b + "\n";
             displayBoundingRect(b);
         }
-        setDebugText2(outStr);
+    }
+
+    //TESTING
+    private void TestDisplayTileArray()
+    {
+        for (int y = 0; y < tileMapData.tileArray.GetLength(1); y++)
+        {
+            for (int x = 0; x < tileMapData.tileArray.GetLength(0); x++)
+            {
+                Tile t = tileMapData.tileArray[x,y];
+                if (!t.empty)
+                {
+                    var pos = new Vector3(t.x * Tile.TILE_SIZE, -t.y * Tile.TILE_SIZE, -5);
+                    var tileSprite = Instantiate(tileSelectPrefab);
+                    tileSprite.transform.position = pos;
+                }
+
+            }
+        }
     }
 
     private void setPlayerStart()
@@ -104,8 +143,85 @@ public class TileSceneControllerScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+	    //check for mouse click
+        if (Input.GetMouseButtonDown(0))
+        {
+            UpdateMouseClick();
+        }
+        UpdateMove();
+
 	}
+
+    private void UpdateMove()
+    {
+        if (movePath.Count > 0)
+        {
+            moveTimer -= Time.deltaTime;
+            if (moveTimer <= 0)
+            {
+                Vector3 newPos = getWorldPosFromTilePoint(new Point(movePath[0].x, -movePath[0].y));
+                player.transform.position = new Vector3(newPos.x, newPos.y, player.transform.position.z);
+                movePath.RemoveAt(0);
+                moveTimer = moveTime;
+            }
+        }
+    }
+
+    private void UpdateMouseClick()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        Vector3 mouseWorldPosition = mainCamera.ScreenToWorldPoint(mousePos);
+        mouseTilePoint = getTileLocationFromVectorPos(mouseWorldPosition);
+        if (mouseTilePoint != null)
+        {
+            Bounds mouseTileBounds = getTileBounds(mouseTilePoint.x, mouseTilePoint.y);
+            AddTileSelectSprite(getWorldPosFromTilePoint(mouseTilePoint));
+
+            if (!(tileMapData.checkCollision(mouseTileBounds)))
+            {
+              
+                Point playerPointPos = getTileLocationFromVectorPos(player.transform.position);
+                movePath = tileMapData.getPath(playerPointPos.x , -playerPointPos.y , mouseTilePoint.x, -mouseTilePoint.y);
+            }
+        }
+    }
+
+    private void AddTileSelectSprite(Vector3 pos)
+    {
+        Destroy(tileSelectSprite);
+        tileSelectSprite = Instantiate(tileSelectPrefab);
+        tileSelectSprite.transform.position = new Vector3(pos.x,pos.y,-5);
+        setDebugText(pos.ToString());
+    }
+
+    private Bounds getTileBounds(int x, int y)
+    {
+        Vector3 center = new UnityEngine.Vector3(x,y,0);
+        Vector3 size = new UnityEngine.Vector3(Tile.TILE_SIZE,Tile.TILE_SIZE);
+        Bounds b = new UnityEngine.Bounds(center, size);
+        return b;
+    }
+
+    private Point getTileLocationFromVectorPos(Vector3 pos)
+    {
+
+        int x = Mathf.RoundToInt(pos.x / Tile.TILE_SIZE);
+        int y = Mathf.RoundToInt(pos.y / Tile.TILE_SIZE);
+        
+        Point retval = null;
+
+        if (x >= 0 && x <= tileMapData.tileArray.GetLength(0) && y <= 0 && y >= -tileMapData.tileArray.GetLength(1))
+        {
+            retval = new Point() { x = (int)x, y = (int)y };
+        }
+        return retval;
+    }
+
+    private Vector3 getWorldPosFromTilePoint(Point p)
+    {
+        return new Vector3(p.x * Tile.TILE_SIZE, p.y * Tile.TILE_SIZE, 0);
+    }
+    
 
     public void setDebugText2(string text)
     {
@@ -205,6 +321,8 @@ public class TileSceneControllerScript : MonoBehaviour {
     {
         Application.LoadLevel(3);
     }
+
+
 
 
 }

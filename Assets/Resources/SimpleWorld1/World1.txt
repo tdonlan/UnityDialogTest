@@ -13,7 +13,7 @@ Forest
 ----
 3
 Desert
-99;ZoneDesert;A vast and desolate desert where the wind blows without end;Desert;45;45
+6;ZoneDesert;A vast and desolate desert where the wind blows without end;Desert;45;45
 --
 2:Forest
 4:Evil Castle

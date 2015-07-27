@@ -8,8 +8,7 @@ public class PlayerControllerScript : MonoBehaviour {
 
     private bool canMove = true;
 
-    private Rect playerRect;
-    private Bounds playerBounds;
+    public Bounds playerBounds;
 
     private TileSceneControllerScript tileSceneScript;
 
@@ -33,8 +32,6 @@ public class PlayerControllerScript : MonoBehaviour {
     {
         var box2d = this.gameObject.GetComponent<BoxCollider2D>();
         playerBounds = box2d.bounds;
-        playerRect = new Rect(gameObject.transform.position.x + box2d.offset.x, gameObject.transform.position.y
-             + box2d.offset.y, box2d.size.x, box2d.size.y);
 
         tileSceneScript.displayBoundingRect(playerBounds);
     }
@@ -44,7 +41,7 @@ public class PlayerControllerScript : MonoBehaviour {
 	void Update () {
         UpdateCamera();
         setPlayerRect();
-        tileSceneScript.setDebugText(playerBounds.ToString());
+      
 
         tileSceneScript.checkPlayerObjectCollision(playerBounds);
 
