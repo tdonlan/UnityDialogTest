@@ -16,6 +16,10 @@ public class ZoneControllerScript : MonoBehaviour {
     public GameObject zoneIcon { get; set; }
     public GameObject zoneButton { get; set; }
 
+    private GameObject pauseButtonPrefab;
+    private GameObject pauseMenuPrefab;
+    private RectTransform canvasRectTransform;
+
 
     public Canvas uiCanvas { get; set; }
 
@@ -23,7 +27,7 @@ public class ZoneControllerScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-       
+      
 	}
 
     void OnLevelWasLoaded(int level)
@@ -42,6 +46,8 @@ public class ZoneControllerScript : MonoBehaviour {
         initPrefabs();
         loadTree();
         setZoneNodes();
+
+        loadPauseMenu();
     }
 
 
@@ -56,6 +62,21 @@ public class ZoneControllerScript : MonoBehaviour {
         */
     }
 
+    //load the Pause Menu and Button to the Canvas
+    private void loadPauseMenu()
+    {
+        GameObject pauseButton = Instantiate(pauseButtonPrefab);
+        var pauseButtonRect = pauseButton.GetComponent<RectTransform>();
+        pauseButtonRect.localPosition = new Vector3(0, 0, 0);
+        pauseButtonRect.SetParent(canvasRectTransform);
+
+        GameObject pauseMenu = Instantiate(pauseMenuPrefab);
+        var pauseMenuRect = pauseMenu.GetComponent<RectTransform>();
+        pauseButtonRect.localPosition = new Vector3(0, 1000, 0);
+        pauseMenuRect.SetParent(canvasRectTransform);
+
+    }
+
 
     private void initPrefabs()
     {
@@ -66,6 +87,11 @@ public class ZoneControllerScript : MonoBehaviour {
         zoneDescription = GameObject.FindGameObjectWithTag("ZoneDescription");
         zoneIcon = GameObject.FindGameObjectWithTag("ZoneIcon");
         zoneButton = GameObject.FindGameObjectWithTag("ZoneButton");
+
+        pauseButtonPrefab = Resources.Load<GameObject>("PauseButtonPrefab");
+        pauseMenuPrefab = Resources.Load<GameObject>("PauseMenuPrefab");
+        canvasRectTransform = GameObject.FindObjectOfType<Canvas>().GetComponent<RectTransform>();
+
     }
 
     private void setZoneNodes()

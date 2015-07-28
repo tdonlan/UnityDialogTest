@@ -71,8 +71,6 @@ public class PlayerControllerScript : MonoBehaviour {
             moveY = -moveAmt;
         }
 
-
-
         if(Input.GetKeyUp(KeyCode.LeftArrow)){
             canMove = true;
         }
@@ -88,22 +86,24 @@ public class PlayerControllerScript : MonoBehaviour {
             canMove = true;
         }
 
-       
             UpdateCamera();
         
     
         var pos = this.gameObject.transform.position;
 
         var newPos = new Vector3(pos.x + moveX, pos.y + moveY);
+
+        Move(newPos);
+       
+	}
+
+    public void Move(Vector3 newPos)
+    {
         if (!checkCollision(getNewBounds(newPos)))
         {
             this.gameObject.transform.position = newPos;
         }
-
-       
-     
-       
-	}
+    }
 
     private void UpdateCamera()
     {

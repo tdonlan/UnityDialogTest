@@ -6,10 +6,15 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 
 using Assets;
+using UnityEngine.EventSystems;
 
 public class TileSceneControllerScript : MonoBehaviour {
 
     public GameDataObject gameDataObject { get; set; }
+
+    private GameObject pauseButtonPrefab;
+    private GameObject pauseMenuPrefab;
+    private RectTransform canvasRectTransform;
 
     public GameObject tileMapPrefab;
     public GameObject tileMapObject;
@@ -42,7 +47,9 @@ public class TileSceneControllerScript : MonoBehaviour {
     List<Point> movePath = new List<Point>();
 
     public float moveTimer;
-    public float moveTime = .1f;
+    public float moveTime = .05f;
+
+
 
 	void Start () {
      
@@ -61,6 +68,8 @@ public class TileSceneControllerScript : MonoBehaviour {
         gameDataObject = GameObject.FindObjectOfType<GameDataObject>();
     }
 
+   
+
     private void initScene()
     {
         initPrefabs();
@@ -69,8 +78,10 @@ public class TileSceneControllerScript : MonoBehaviour {
         loadTileMapData();
         setPlayerStart();
 
+        loadPauseMenu();
+
         //testing
-        TestDisplayTileArray();
+        //TestDisplayTileArray();
     }
 
     private void loadTree()
@@ -94,6 +105,10 @@ public class TileSceneControllerScript : MonoBehaviour {
         tileSelectPrefab = Resources.Load<GameObject>("Prefabs/TileSelectPrefab");
 
         spritePrefab = Resources.Load<GameObject>("Prefabs/SpritePrefab");
+
+        pauseButtonPrefab = Resources.Load<GameObject>("Prefabs/PauseButtonPrefab");
+        pauseMenuPrefab = Resources.Load<GameObject>("Prefabs/PauseMenuPrefab");
+        canvasRectTransform = GameObject.FindObjectOfType<Canvas>().GetComponent<RectTransform>();
     }
 
     private void loadTileMap()
@@ -114,6 +129,21 @@ public class TileSceneControllerScript : MonoBehaviour {
             outStr += b + "\n";
             displayBoundingRect(b);
         }
+    }
+
+    //Added manually to scene - remove?
+    private void loadPauseMenu()
+    {
+        GameObject pauseButton = Instantiate(pauseButtonPrefab);
+        var pauseButtonRect = pauseButton.GetComponent<RectTransform>();
+        pauseButtonRect.localPosition = new Vector3(0, 0, 0);
+        pauseButtonRect.SetParent(canvasRectTransform);
+
+        GameObject pauseMenu = Instantiate(pauseMenuPrefab);
+        var pauseMenuRect = pauseMenu.GetComponent<RectTransform>();
+        pauseButtonRect.localPosition = new Vector3(0, 1000, 0);
+        pauseMenuRect.SetParent(canvasRectTransform);
+
     }
 
     //TESTING
@@ -146,7 +176,11 @@ public class TileSceneControllerScript : MonoBehaviour {
 	    //check for mouse click
         if (Input.GetMouseButtonDown(0))
         {
-            UpdateMouseClick();
+            if (!EventSystem.current.IsPointerOverGameObject())
+            {
+                UpdateMouseClick();
+            }
+          
         }
         UpdateMove();
 
@@ -160,7 +194,8 @@ public class TileSceneControllerScript : MonoBehaviour {
             if (moveTimer <= 0)
             {
                 Vector3 newPos = getWorldPosFromTilePoint(new Point(movePath[0].x, -movePath[0].y));
-                player.transform.position = new Vector3(newPos.x, newPos.y, player.transform.position.z);
+                playerScript.Move(newPos);
+               // player.transform.position = new Vector3(newPos.x, newPos.y, player.transform.position.z);
                 movePath.RemoveAt(0);
                 moveTimer = moveTime;
             }
