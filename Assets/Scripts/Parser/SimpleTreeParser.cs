@@ -38,8 +38,6 @@ using UnityEngine;
             
             TreeStore ts = new TreeStore();
 
-            GlobalFlags gf = new GlobalFlags();
-
             string[] lineArray = manifestSimple.Split(new string[]{Environment.NewLine},StringSplitOptions.None);
 
             foreach (var line in lineArray.ToList<String>())
@@ -48,7 +46,7 @@ using UnityEngine;
 
                 TextAsset treeText = Resources.Load<TextAsset>(treeArray[0]);
 
-                ITree tempTree = SimpleTreeParser.getTreeFromString(treeText.text, (TreeType)Int32.Parse(treeArray[1]), gf);
+                ITree tempTree = SimpleTreeParser.getTreeFromString(treeText.text, (TreeType)Int32.Parse(treeArray[1]), ts.globalFlags);
                 tempTree.treeName = treeArray[2];
                 ts.treeDictionary.Add(Int32.Parse(treeArray[3]), tempTree);
             }

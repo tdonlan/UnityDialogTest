@@ -50,7 +50,8 @@ using System.IO;
            
            if (str.Contains(blockStart) && str.Contains(blockEnd))
            {
-               int startIndex = str.IndexOf(blockStart) + blockStart.Length;
+               int startIndex = str.IndexOf(blockStart);
+               
                return str.Remove(startIndex);
            }
            else

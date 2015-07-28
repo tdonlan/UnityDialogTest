@@ -3,7 +3,7 @@ Hi
 1;Hermit;Hermit;Heh, what ya doin out here in the woods?
 --
 2:Um, exploring.  What do you care?
-4:What is the secret?;{HermitSecret}
+4:What is the secret?{HermitSecret}
 ----
 2
 Exploring
