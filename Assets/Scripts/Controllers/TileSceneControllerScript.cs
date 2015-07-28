@@ -75,7 +75,9 @@ public class TileSceneControllerScript : MonoBehaviour {
         initPrefabs();
         loadTree();
         loadTileMap();
+        
         loadTileMapData();
+        loadTileSprites();
         setPlayerStart();
 
         loadPauseMenu();
@@ -130,6 +132,29 @@ public class TileSceneControllerScript : MonoBehaviour {
             displayBoundingRect(b);
         }
     }
+
+    private void loadTileSprites()
+    {
+        for (int i = 0; i < tileMapData.objectBounds.Count; i++)
+        {
+            ZoneTreeNode node = (ZoneTreeNode)zoneTree.getNode(i+1);
+            loadTileSprite(node.content.icon, tileMapData.objectBounds[i].center);
+        }
+    }
+
+    private void loadTileSprite(string spriteName, Vector3 pos)
+    {
+
+        var spriteResource = Resources.Load<Sprite>("ZoneImage/"+spriteName);
+        if(spriteResource != null){
+              var spriteObject = Instantiate(spritePrefab);
+              spriteObject.transform.position = pos;
+            var spriteObjectSprite = spriteObject.GetComponent<SpriteRenderer>();
+            spriteObjectSprite.sprite = spriteResource;
+        }
+
+    }
+
 
     //Added manually to scene - remove?
     private void loadPauseMenu()

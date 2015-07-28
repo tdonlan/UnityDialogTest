@@ -20,7 +20,6 @@ public class ZoneControllerScript : MonoBehaviour {
     private GameObject pauseMenuPrefab;
     private RectTransform canvasRectTransform;
 
-
     public Canvas uiCanvas { get; set; }
 
     public List<GameObject> zoneNodeList = new List<GameObject>();

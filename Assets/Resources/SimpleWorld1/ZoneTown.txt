@@ -8,7 +8,7 @@ Town Square
 ----
 2
 Zoe
-2;Zoe;Dialog;A perky girl with red hair and freckles.  Talkative;Zoe;0;0
+2;Zoe;Dialog;A perky girl with red hair and freckles.  Talkative;ZoeSprite;0;0
 --
 1:Town Square
 3:Alley
@@ -16,7 +16,7 @@ Zoe
 ----
 3
 Alley
-99;Alley;Battle;A garbage strewn alley way, with rats swarming out of the garbage heap;Rats;100;100
+99;Alley;Battle;A garbage strewn alley way, with rats swarming out of the garbage heap;RatSprite;100;100
 --
 1:Town Square
 2:Zoe
@@ -24,7 +24,7 @@ Alley
 ----
 4
 Blacksmith
-99;Blacksmith;Store;A brawny man with soot-stained bulging forearms;Blacksmith;-200;100
+99;Blacksmith;Store;A brawny man with soot-stained bulging forearms;BlacksmithSprite;-200;100
 --
 1:Town Square
 2:Zoe
