@@ -1,0 +1,42 @@
+1
+Rat Battle
+1;ZoneTown;Info;The rats scury from the dirty cracks in the alleyway and leap at you!;Town;
+--
+2:Rat
+3:Rat
+4:Rat
+5:Gold
+6:Rusty Sword
+7:Win
+----
+2
+Rat
+1;Rat;Enemy;Red eyes and a snarling mouth dripping diseased spittle;Rat;0;0
+--
+----
+3
+Rat
+1;Rat;Enemy;Red eyes and a snarling mouth dripping diseased spittle;Rat;0;0
+--
+----
+4
+Rat
+1;Rat;Enemy;Red eyes and a snarling mouth dripping diseased spittle;Rat;0;0
+--
+----
+5
+Gold
+1;Gold;Loot;A few gleaming coins;Gold;50
+--
+----
+6
+Rust Sword
+1;Rust Sword;Loot;Bent and old, but still dangerous;RustSword;1
+--
+----
+7
+Win
+1;WinScreen;Win;You slaughter the diseased rats with a vengeance, leaving only smashed bundles of fur and blood;WinScreen
+{RatsKilled}
+--
+----

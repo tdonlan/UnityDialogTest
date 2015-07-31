@@ -183,6 +183,28 @@ using System.Text;
 
     }
 
+    public class BattleTreeNode : TreeNode, ITreeNode
+    {
+        public BattleNodeContent content { get; set; }
+
+        public BattleTreeNode(long index, string name, List<TreeBranch> branchList, List<TreeNodeFlagSet> flagSetList, BattleNodeContent content)
+        {
+            this.content = content;
+            this.index = index;
+            this.name = name;
+
+            this.branchList = branchList;
+            this.flagSetList = flagSetList;
+        }
+
+        public override string ToString()
+        {
+            string retval = string.Format("{0}.{1}: {2}\n", index, name, content);
+            return retval;
+        }
+
+    }
+
     #endregion
 
 
@@ -223,6 +245,18 @@ using System.Text;
     public class QuestNodeContent : ITreeNodeContent
     {
         public string content { get; set; }
+    }
+
+    public class BattleNodeContent : ITreeNodeContent
+    {
+        public BattleNodeType nodeType { get; set; }
+        public string nodeName { get; set; }
+        public long linkIndex { get; set; }
+        public string icon { get; set; }
+        public string description { get; set; }
+        public int x { get;set; }
+        public int y { get; set; }
+        public int count { get; set; }
     }
 
 #endregion

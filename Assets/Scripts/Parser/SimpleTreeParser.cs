@@ -88,6 +88,13 @@ using UnityEngine;
                     questTree.currentIndex = treeNodeList[0].index;
                     t = questTree;
                     break;
+                case TreeType.Battle:
+                    BattleTree battleTree = new BattleTree(gf, treeType);
+                    treeNodeList = getTreeNodeListFromString(data, treeType);
+                    battleTree.treeNodeDictionary = getBattleTreeNodeFromList(treeNodeList);
+                    battleTree.currentIndex = treeNodeList[0].index;
+                    t = battleTree;
+                    break;
                 default:
                     break;
             }
@@ -215,6 +222,14 @@ using UnityEngine;
                     }
                     node = questTreeNode;
                     break;
+                case TreeType.Battle:
+                    var battleTreeNode = new BattleTreeNode(Int64.Parse(dataList[0]), dataList[1], null, null, (BattleNodeContent)getTreeNodeContentFromStr(dataList[2], treeType));
+                    if (dataList.Count > 3)
+                    {
+                        battleTreeNode.flagSetList = getFlagSetFromDataStr(dataList[3]);
+                    }
+                    node = battleTreeNode;
+                    break;
                 default: break;
             }
          
@@ -234,9 +249,30 @@ using UnityEngine;
                     return new DialogNodeContent() {linkIndex = Int64.Parse(contentList[0]), speaker=contentList[1],portrait=contentList[2], text=contentList[3] };
                 case TreeType.Quest:
                     return new QuestNodeContent() {content=contentStr };
+                case TreeType.Battle:
+                    return getBattleNodeContentFromStr(contentStr);
                 default:
                     return null;
             }
+        }
+
+        //Parsing of BattleNodeContent, helper for getTreeNodeContentFromStr
+        private static BattleNodeContent getBattleNodeContentFromStr(string contentStr)
+        {
+              var contentList = ParseHelper.getSplitList(contentStr,";");
+             BattleNodeType battleNodeType = getBattleNodeTypeFromStr(contentList[2]);
+             switch (battleNodeType)
+              {
+                  case BattleNodeType.Info:
+                      return new BattleNodeContent() { linkIndex = Int64.Parse(contentList[0]), nodeName = contentList[1], nodeType = battleNodeType, description = contentList[3], icon=contentList[4] };
+                  case BattleNodeType.Enemy:
+                      return new BattleNodeContent() { linkIndex = Int64.Parse(contentList[0]), nodeName = contentList[1], nodeType = battleNodeType, description = contentList[3], icon = contentList[4], x = Int32.Parse(contentList[5]), y = Int32.Parse(contentList[6]) };
+                  case BattleNodeType.Loot:
+                      return new BattleNodeContent() { linkIndex = Int64.Parse(contentList[0]), nodeName = contentList[1], nodeType = battleNodeType, description = contentList[3], icon = contentList[4], count = Int32.Parse(contentList[5]) };
+                  case BattleNodeType.Win:
+                      return new BattleNodeContent() { linkIndex = Int64.Parse(contentList[0]), nodeName = contentList[1], nodeType = battleNodeType, description = contentList[3], icon = contentList[4] };
+                  default: return null;
+              }
         }
 
         private static ZoneNodeType getZoneNodeTypeFromStr(string zoneTypeStr)
@@ -244,6 +280,13 @@ using UnityEngine;
             return (from data in Enum.GetValues(typeof(ZoneNodeType)).Cast<ZoneNodeType>().ToList()
                             where data.ToString() == zoneTypeStr
                             select data).FirstOrDefault();
+        }
+
+        private static BattleNodeType getBattleNodeTypeFromStr(string battleTypeStr)
+        {
+            return (from data in Enum.GetValues(typeof(BattleNodeType)).Cast<BattleNodeType>().ToList()
+                    where data.ToString() == battleTypeStr
+                    select data).FirstOrDefault();
         }
 
         //Defaulting to a list of bool flags
@@ -335,6 +378,18 @@ using UnityEngine;
             foreach (var node in treeNodeList)
             {
                 QuestTreeNode wNode = (QuestTreeNode)node;
+                treeNodeDict.Add(wNode.index, wNode);
+            }
+
+            return treeNodeDict;
+        }
+
+        public static Dictionary<long, BattleTreeNode> getBattleTreeNodeFromList(List<ITreeNode> treeNodeList)
+        {
+            Dictionary<long, BattleTreeNode> treeNodeDict = new Dictionary<long, BattleTreeNode>();
+            foreach (var node in treeNodeList)
+            {
+                BattleTreeNode wNode = (BattleTreeNode)node;
                 treeNodeDict.Add(wNode.index, wNode);
             }
 

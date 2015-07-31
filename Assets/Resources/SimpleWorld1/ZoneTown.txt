@@ -16,7 +16,7 @@ Zoe
 ----
 3
 Alley
-99;Alley;Battle;A garbage strewn alley way, with rats swarming out of the garbage heap;RatSprite;100;100
+7;Alley;Battle;A garbage strewn alley way, with rats swarming out of the garbage heap;RatSprite;100;100
 --
 1:Town Square
 2:Zoe

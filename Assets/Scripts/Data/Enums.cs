@@ -7,10 +7,11 @@ using System.Text;
 
     public enum TreeType
     {
-        World,
-        Zone,
-        Dialog,
-        Quest,
+        World=0,
+        Zone=1,
+        Dialog=2,
+        Quest=3,
+        Battle=4
 
     }
 
@@ -24,5 +25,13 @@ using System.Text;
         Puzzle,
         Link,
 
+    }
+
+    public enum BattleNodeType
+    {
+        Info,
+        Enemy,
+        Loot,
+        Win
     }
 

@@ -268,6 +268,69 @@ using System.Text;
          }
      }
 
+     public class BattleTree : ITree
+     {
+         public string treeName { get; set; }
+         public long treeIndex { get; set; }
+         public long currentIndex { get; set; }
+         public TreeType treeType { get; set; }
+
+         public Dictionary<long, BattleTreeNode> treeNodeDictionary { get; set; }
+
+         public GlobalFlags globalFlags { get; set; }
+
+         public BattleTree(GlobalFlags globalFlags, TreeType treeType)
+         {
+             currentIndex = 0;
+             treeNodeDictionary = new Dictionary<long, BattleTreeNode>();
+             this.globalFlags = globalFlags;
+             this.treeType = treeType;
+         }
+
+         public ITreeNode getNode(long index)
+         {
+             if (treeNodeDictionary.ContainsKey(index))
+             {
+                 return treeNodeDictionary[index];
+             }
+             return null;
+         }
+
+         public void SelectNode(long index)
+         {
+             this.currentIndex = index;
+
+             treeNodeDictionary[currentIndex].SelectNode(this);
+
+         }
+
+         public bool checkNode(long index)
+         {
+             return treeNodeDictionary.ContainsKey(index);
+         }
+
+         public bool validateTreeLinks()
+         {
+             bool validLinks = true;
+             foreach (TreeNode node in treeNodeDictionary.Values)
+             {
+                 foreach (var branch in node.branchList)
+                 {
+                     Console.Write(string.Format("Checking {0} for link {1} ...", branch.description, branch.linkIndex));
+                     if (!checkNode(branch.linkIndex))
+                     {
+                         validLinks = false;
+                         Console.Write(" MISSING.\n");
+                     }
+                     else
+                     {
+                         Console.Write(" found.\n");
+                     }
+                 }
+             }
+             return validLinks;
+         }
+     }
 
     public class TreeBranchCondition
     {
