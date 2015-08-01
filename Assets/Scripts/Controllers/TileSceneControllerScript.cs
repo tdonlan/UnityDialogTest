@@ -355,6 +355,7 @@ public class TileSceneControllerScript : MonoBehaviour {
                 ClickDialogNode(currentNode.content.linkIndex);
                 break;
             case ZoneNodeType.Battle:
+                ClickBattleNode(currentNode.content.linkIndex);
                 break; 
             case ZoneNodeType.Info:
                 break;
@@ -382,6 +383,10 @@ public class TileSceneControllerScript : MonoBehaviour {
         Application.LoadLevel(3);
     }
 
+    private void ClickBattleNode(long battleIndex)
+    {
+        Application.LoadLevel(5);
+    }
 
 
 

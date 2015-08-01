@@ -169,14 +169,22 @@ public class ZoneControllerScript : MonoBehaviour {
     {
         ZoneTreeNode clickedNode = (ZoneTreeNode)zoneTree.getNode(nodeIndex);
 
-        if (clickedNode.content.nodeType == ZoneNodeType.Link)
+        switch (clickedNode.content.nodeType)
         {
-            Application.LoadLevel(1);
+            case ZoneNodeType.Link:
+                Application.LoadLevel(1);
+                break;
+            case ZoneNodeType.Dialog:
+                Application.LoadLevel(3);
+                break;
+            case ZoneNodeType.Battle:
+                Application.LoadLevel(5);
+                break;
+            default:
+                break;
         }
-        if(clickedNode.content.nodeType == ZoneNodeType.Dialog)
-        {
-            Application.LoadLevel(3);
-        }
+
+      
     }
 	
 	// Update is called once per frame
