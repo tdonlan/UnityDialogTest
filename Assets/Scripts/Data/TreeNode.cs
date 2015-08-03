@@ -205,6 +205,28 @@ using System.Text;
 
     }
 
+    public class InfoTreeNode : TreeNode, ITreeNode
+    {
+        public InfoNodeContent content { get; set; }
+
+        public InfoTreeNode(long index, string name, List<TreeBranch> branchList, List<TreeNodeFlagSet> flagSetList, InfoNodeContent content)
+        {
+            this.content = content;
+            this.index = index;
+            this.name = name;
+
+            this.branchList = branchList;
+            this.flagSetList = flagSetList;
+        }
+
+        public override string ToString()
+        {
+            string retval = string.Format("{0}.{1}: {2}\n", index, name, content);
+            return retval;
+        }
+
+    }
+
     #endregion
 
 
@@ -257,6 +279,15 @@ using System.Text;
         public int x { get;set; }
         public int y { get; set; }
         public int count { get; set; }
+    }
+
+    public class InfoNodeContent : ITreeNodeContent
+    {
+        public InfoNodeType nodeType { get; set; }
+        public string icon { get; set; }
+        public string nodeName { get; set; }
+        public string text { get; set; }
+        public long linkIndex { get; set; }
     }
 
 #endregion

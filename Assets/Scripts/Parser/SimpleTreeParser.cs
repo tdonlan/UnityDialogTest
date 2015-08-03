@@ -35,20 +35,28 @@ using UnityEngine;
         //Load the tree store from a simple file list (not json)
         public static TreeStore LoadTreeStoreFromSimpleManifest(string manifestSimple)
         {
-            
+
             TreeStore ts = new TreeStore();
-
-            string[] lineArray = manifestSimple.Split(new string[]{Environment.NewLine},StringSplitOptions.None);
-
-            foreach (var line in lineArray.ToList<String>())
+            try
             {
-                string[] treeArray = line.Split(';');
+                string[] lineArray = manifestSimple.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 
-                TextAsset treeText = Resources.Load<TextAsset>(treeArray[0]);
+                foreach (var line in lineArray.ToList<String>())
+                {
+                    string[] treeArray = line.Split(';');
 
-                ITree tempTree = SimpleTreeParser.getTreeFromString(treeText.text, (TreeType)Int32.Parse(treeArray[1]), ts.globalFlags);
-                tempTree.treeName = treeArray[2];
-                ts.treeDictionary.Add(Int32.Parse(treeArray[3]), tempTree);
+                    TextAsset treeText = Resources.Load<TextAsset>(treeArray[0]);
+
+                    ITree tempTree = SimpleTreeParser.getTreeFromString(treeText.text, (TreeType)Int32.Parse(treeArray[1]), ts.globalFlags);
+                    tempTree.treeName = treeArray[2];
+                    ts.treeDictionary.Add(Int32.Parse(treeArray[3]), tempTree);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                string error = ex.Message + ex.StackTrace;
+                return null;
             }
 
             return ts;
@@ -94,6 +102,13 @@ using UnityEngine;
                     battleTree.treeNodeDictionary = getBattleTreeNodeFromList(treeNodeList);
                     battleTree.currentIndex = treeNodeList[0].index;
                     t = battleTree;
+                    break;
+                case TreeType.Info:
+                    InfoTree infoTree = new InfoTree(gf, treeType);
+                    treeNodeList = getTreeNodeListFromString(data, treeType);
+                    infoTree.treeNodeDictionary = getInfoTreeNodeFromList(treeNodeList);
+                    infoTree.currentIndex = treeNodeList[0].index;
+                    t = infoTree;
                     break;
                 default:
                     break;
@@ -230,6 +245,14 @@ using UnityEngine;
                     }
                     node = battleTreeNode;
                     break;
+                case TreeType.Info:
+                     var infoTreeNode = new InfoTreeNode(Int64.Parse(dataList[0]), dataList[1], null, null, (InfoNodeContent)getTreeNodeContentFromStr(dataList[2], treeType));
+                    if (dataList.Count > 3)
+                    {
+                        infoTreeNode.flagSetList = getFlagSetFromDataStr(dataList[3]);
+                    }
+                    node = infoTreeNode;
+                    break;
                 default: break;
             }
          
@@ -251,6 +274,8 @@ using UnityEngine;
                     return new QuestNodeContent() {content=contentStr };
                 case TreeType.Battle:
                     return getBattleNodeContentFromStr(contentStr);
+                case TreeType.Info:
+                    return getInfoNodeContentFromStr(contentStr);
                 default:
                     return null;
             }
@@ -271,8 +296,21 @@ using UnityEngine;
                       return new BattleNodeContent() { linkIndex = Int64.Parse(contentList[0]), nodeName = contentList[1], nodeType = battleNodeType, description = contentList[3], icon = contentList[4], count = Int32.Parse(contentList[5]) };
                   case BattleNodeType.Win:
                       return new BattleNodeContent() { linkIndex = Int64.Parse(contentList[0]), nodeName = contentList[1], nodeType = battleNodeType, description = contentList[3], icon = contentList[4] };
-                  default: return null;
+               
+                 default: return null;
               }
+        }
+
+        private static InfoNodeContent getInfoNodeContentFromStr(string contentStr)
+        {
+            var contentList = ParseHelper.getSplitList(contentStr, ";");
+            InfoNodeType infoNodeType = getInfoNodeTypeFromStr(contentList[2]);
+            switch (infoNodeType)
+            {
+                case InfoNodeType.Info:
+                    return new InfoNodeContent() { linkIndex = Int64.Parse(contentList[0]), nodeName = contentList[1], nodeType = infoNodeType, text = contentList[3], icon = contentList[4] };
+                default: return null;
+            }
         }
 
         private static ZoneNodeType getZoneNodeTypeFromStr(string zoneTypeStr)
@@ -285,6 +323,13 @@ using UnityEngine;
         private static BattleNodeType getBattleNodeTypeFromStr(string battleTypeStr)
         {
             return (from data in Enum.GetValues(typeof(BattleNodeType)).Cast<BattleNodeType>().ToList()
+                    where data.ToString() == battleTypeStr
+                    select data).FirstOrDefault();
+        }
+
+        private static InfoNodeType getInfoNodeTypeFromStr(string battleTypeStr)
+        {
+            return (from data in Enum.GetValues(typeof(InfoNodeType)).Cast<InfoNodeType>().ToList()
                     where data.ToString() == battleTypeStr
                     select data).FirstOrDefault();
         }
@@ -390,6 +435,18 @@ using UnityEngine;
             foreach (var node in treeNodeList)
             {
                 BattleTreeNode wNode = (BattleTreeNode)node;
+                treeNodeDict.Add(wNode.index, wNode);
+            }
+
+            return treeNodeDict;
+        }
+
+        public static Dictionary<long, InfoTreeNode> getInfoTreeNodeFromList(List<ITreeNode> treeNodeList)
+        {
+            Dictionary<long, InfoTreeNode> treeNodeDict = new Dictionary<long, InfoTreeNode>();
+            foreach (var node in treeNodeList)
+            {
+                InfoTreeNode wNode = (InfoTreeNode)node;
                 treeNodeDict.Add(wNode.index, wNode);
             }
 

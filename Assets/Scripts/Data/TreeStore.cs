@@ -33,6 +33,15 @@ using System.IO;
             return null;
         }
 
+        public ITree getTree(long index)
+        {
+            if (treeDictionary.ContainsKey(index))
+            {
+                return treeDictionary[index];
+            }
+            return null;
+        }
+
         public void SelectTree(long index)
         {
             if (treeDictionary.ContainsKey(index))
@@ -40,4 +49,6 @@ using System.IO;
                 this.currentTreeIndex = index;
             }
         }
+
+
     }

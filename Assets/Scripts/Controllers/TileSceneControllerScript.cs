@@ -16,6 +16,9 @@ public class TileSceneControllerScript : MonoBehaviour {
     private GameObject pauseMenuPrefab;
     private RectTransform canvasRectTransform;
 
+    public GameObject TreeInfoPanel;
+    private RectTransform treeInfoPanelRectTransform;
+
     public GameObject tileMapPrefab;
     public GameObject tileMapObject;
 
@@ -111,6 +114,8 @@ public class TileSceneControllerScript : MonoBehaviour {
         pauseButtonPrefab = Resources.Load<GameObject>("Prefabs/PauseButtonPrefab");
         pauseMenuPrefab = Resources.Load<GameObject>("Prefabs/PauseMenuPrefab");
         canvasRectTransform = GameObject.FindObjectOfType<Canvas>().GetComponent<RectTransform>();
+
+        treeInfoPanelRectTransform = TreeInfoPanel.GetComponent<RectTransform>();
     }
 
     private void loadTileMap()
@@ -326,6 +331,7 @@ public class TileSceneControllerScript : MonoBehaviour {
             if (currentNodeIndex > 0)
             {
                 //check condition here
+                //should use a helper in the Tree class, not drilling down into dictionary/TryGetValue method
                 if (zoneTree.treeNodeDictionary.TryGetValue(currentNodeIndex, out currentNode))
                 {
                     panelText.text = currentNode.content.nodeName + " " + currentNode.content.description;
@@ -358,11 +364,28 @@ public class TileSceneControllerScript : MonoBehaviour {
                 ClickBattleNode(currentNode.content.linkIndex);
                 break; 
             case ZoneNodeType.Info:
+                ClickInfoNode(currentNode.content.linkIndex);
                 break;
             default:
                 break;
                      
         }
+    }
+
+    private void ClickInfoNode(long linkIndex)
+    {
+        //update the TreeInfoPanel
+        InfoTree curInfoTree = (InfoTree)gameDataObject.treeStore.getTree(linkIndex);
+       
+        if (curInfoTree != null)
+        {
+            InfoTreeNode infoNode = (InfoTreeNode)curInfoTree.getNode(curInfoTree.currentIndex);
+            UIHelper.UpdateTextComponent(TreeInfoPanel,"TreeInfoTitle",infoNode.content.nodeName);
+             UIHelper.UpdateTextComponent(TreeInfoPanel,"TreeInfoText",infoNode.content.text);
+        }
+
+
+        treeInfoPanelRectTransform.localPosition = new UnityEngine.Vector3(0, 0, 0);
     }
 
     private void ClickLinkNode(long linkIndex)

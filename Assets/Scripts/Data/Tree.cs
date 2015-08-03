@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
   
     public class WorldTree : ITree
     {
@@ -329,6 +330,53 @@ using System.Text;
                  }
              }
              return validLinks;
+         }
+     }
+
+     public class InfoTree : ITree
+     {
+         public string treeName { get; set; }
+         public long treeIndex { get; set; }
+         public long currentIndex { get; set; }
+         public TreeType treeType { get; set; }
+
+         public Dictionary<long, InfoTreeNode> treeNodeDictionary { get; set; }
+
+         public GlobalFlags globalFlags { get; set; }
+
+         public InfoTree(GlobalFlags globalFlags, TreeType treeType)
+         {
+             currentIndex = 0;
+             treeNodeDictionary = new Dictionary<long, InfoTreeNode>();
+             this.globalFlags = globalFlags;
+             this.treeType = treeType;
+         }
+
+         public ITreeNode getNode(long index)
+         {
+             if (treeNodeDictionary.ContainsKey(index))
+             {
+                 return treeNodeDictionary[index];
+             }
+             return null;
+         }
+
+         public void SelectNode(long index)
+         {
+             this.currentIndex = index;
+
+             treeNodeDictionary[currentIndex].SelectNode(this);
+
+         }
+
+         public bool checkNode(long index)
+         {
+             return treeNodeDictionary.ContainsKey(index);
+         }
+
+         public bool validateTreeLinks()
+         {
+           return true;
          }
      }
 

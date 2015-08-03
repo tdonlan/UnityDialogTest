@@ -11,7 +11,8 @@ using System.Text;
         Zone=1,
         Dialog=2,
         Quest=3,
-        Battle=4
+        Battle=4,
+        Info=5
 
     }
 
@@ -33,5 +34,12 @@ using System.Text;
         Enemy,
         Loot,
         Win
+    }
+
+    public enum InfoNodeType
+    {
+        Info,
+        Loot,
+        End
     }
 
