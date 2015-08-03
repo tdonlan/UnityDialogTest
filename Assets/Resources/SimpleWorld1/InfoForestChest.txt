@@ -2,17 +2,6 @@
 Chest
 1;Chest;Info;Chest;Iron Bound Chest
 {ForestChest}
---
-2:Gold
-3:Rusty Key
-----
-2
-Gold
-1;Gold;Loot;Gold;A few gleaming coins;Gold;50
---
-----
-3
-Rusty Key
-1;Rusty Key;Loot;Key;A dirty old key;Key;1
+{AddItem;1;Gold;50},{AddItem;2;Rusty Key;1}
 --
 ----

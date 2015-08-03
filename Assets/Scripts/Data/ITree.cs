@@ -21,8 +21,8 @@ using System.Text;
     {
          long index { get; set; }
          List<TreeBranch> branchList { get; set; }
-
          List<TreeNodeFlagSet> flagSetList { get; set; }
+         List<TreeNodeAction> actionList { get; set; }
 
           void SelectNode(ITree t);
           List<TreeBranch> getBranchList(ITree t);

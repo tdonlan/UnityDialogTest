@@ -14,6 +14,8 @@ using System.Text;
 
         public List<TreeNodeFlagSet> flagSetList { get; set; }
 
+        public List<TreeNodeAction> actionList { get; set; }
+
         public void SelectNode(ITree t)
         {
             if (flagSetList != null)
@@ -21,6 +23,22 @@ using System.Text;
                 foreach (var flag in flagSetList)
                 {
                     t.globalFlags.addFlag(flag.flagName, flag.flagType, flag.value);
+                }
+            }
+        }
+
+        //need to pass in reference to the game to run these actions
+        public void runActions()
+        {
+            foreach (var action in actionList)
+            {
+                switch (action.actionType)
+                {
+                    case NodeActionType.AddItem:
+                            //add the item to player inventory
+                        break;
+                    default: 
+                        break;
                 }
             }
         }

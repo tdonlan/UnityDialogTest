@@ -193,6 +193,7 @@ using UnityEngine;
 
             ITreeNode td = getTreeNodeFromDataStr(nodeDataStr, treeType);
             td.branchList = getTreeBranchListFromDataStr(linkDataStr);
+
             return td;
 
         }
@@ -207,53 +208,38 @@ using UnityEngine;
                 case TreeType.World:
                     
                     var worldTreeNode =  new WorldTreeNode(Int64.Parse(dataList[0]), dataList[1], null, null, (WorldNodeContent)getTreeNodeContentFromStr(dataList[2], treeType));
-                    if (dataList.Count > 3)
-                    {
-                        worldTreeNode.flagSetList = getFlagSetFromDataStr(dataList[3]);
-                    }
                     node = worldTreeNode;
                     break; 
                 case TreeType.Zone:
                     var zoneTreeNode = new ZoneTreeNode(Int64.Parse(dataList[0]), dataList[1], null, null, (ZoneNodeContent)getTreeNodeContentFromStr(dataList[2], treeType));
-                    if (dataList.Count > 3)
-                    {
-                        zoneTreeNode.flagSetList = getFlagSetFromDataStr(dataList[3]);
-                    }
                     node = zoneTreeNode;
                     break; 
                 case TreeType.Dialog:
                     var dialogTreeNode = new DialogTreeNode(Int64.Parse(dataList[0]), dataList[1], null, null, (DialogNodeContent)getTreeNodeContentFromStr(dataList[2], treeType));
-                    if (dataList.Count > 3)
-                    {
-                        dialogTreeNode.flagSetList = getFlagSetFromDataStr(dataList[3]);
-                    }
-                    node = dialogTreeNode;
+                node = dialogTreeNode;
                     break;
                 case TreeType.Quest:
                     var questTreeNode = new QuestTreeNode(Int64.Parse(dataList[0]), dataList[1], null, null, (QuestNodeContent)getTreeNodeContentFromStr(dataList[2], treeType));
-                    if (dataList.Count > 3)
-                    {
-                        questTreeNode.flagSetList = getFlagSetFromDataStr(dataList[3]);
-                    }
                     node = questTreeNode;
                     break;
                 case TreeType.Battle:
                     var battleTreeNode = new BattleTreeNode(Int64.Parse(dataList[0]), dataList[1], null, null, (BattleNodeContent)getTreeNodeContentFromStr(dataList[2], treeType));
-                    if (dataList.Count > 3)
-                    {
-                        battleTreeNode.flagSetList = getFlagSetFromDataStr(dataList[3]);
-                    }
                     node = battleTreeNode;
                     break;
                 case TreeType.Info:
                      var infoTreeNode = new InfoTreeNode(Int64.Parse(dataList[0]), dataList[1], null, null, (InfoNodeContent)getTreeNodeContentFromStr(dataList[2], treeType));
-                    if (dataList.Count > 3)
-                    {
-                        infoTreeNode.flagSetList = getFlagSetFromDataStr(dataList[3]);
-                    }
-                    node = infoTreeNode;
+                   node = infoTreeNode;
                     break;
                 default: break;
+            }
+
+            if (dataList.Count > 3)
+            {
+                node.flagSetList = getFlagSetFromDataStr(dataList[3]);
+            }
+            if (dataList.Count > 4)
+            {
+                node.actionList = getTreeNodeActionListFromDataStr(dataList[4]);
             }
          
             return node;
@@ -332,6 +318,32 @@ using UnityEngine;
             return (from data in Enum.GetValues(typeof(InfoNodeType)).Cast<InfoNodeType>().ToList()
                     where data.ToString() == battleTypeStr
                     select data).FirstOrDefault();
+        }
+
+        public static NodeActionType getNodeActionTypeFromStr(string nodeActionStr)
+        {
+            return (from data in Enum.GetValues(typeof(NodeActionType)).Cast<NodeActionType>().ToList()
+                    where data.ToString() == nodeActionStr
+                    select data).FirstOrDefault();
+        }
+
+        //Format: {<nodeAction>;<index>;<action name>;<action count>},{action1},{action3}
+        private static List<TreeNodeAction> getTreeNodeActionListFromDataStr(string actionListStr)
+        {
+            List<TreeNodeAction> actionList = new List<TreeNodeAction>();
+            List<string> actionSplitList = actionListStr.Split(',').ToList();
+            foreach (var actionStr in actionSplitList)
+            {
+                var fieldSplitList = ParseHelper.getSplitListInBlock(actionStr, ";", "{", "}");
+                if(fieldSplitList.Count > 2){
+                    TreeNodeAction tempAction = new TreeNodeAction() { actionType = getNodeActionTypeFromStr(fieldSplitList[0]), index = Int64.Parse(fieldSplitList[1]), actionName = fieldSplitList[2], count = Int32.Parse(fieldSplitList[3]) };
+
+                    actionList.Add(tempAction);
+                }
+               
+            }
+
+            return actionList;
         }
 
         //Defaulting to a list of bool flags

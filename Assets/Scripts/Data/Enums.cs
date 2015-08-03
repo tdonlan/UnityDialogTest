@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 
 
-
     public enum TreeType
     {
         World=0,
@@ -41,5 +40,15 @@ using System.Text;
         Info,
         Loot,
         End
+    }
+
+    public enum NodeActionType
+    {
+        AddFlag,
+        RemoveFlag,
+        AddItem,
+        RemoveItem,
+        AddEffect,
+        RemoveEffect
     }
 

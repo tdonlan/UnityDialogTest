@@ -401,6 +401,13 @@ using System.Text;
         public FlagType flagType { get; set; }
     }
 
+    public class TreeNodeAction
+    {
+        public NodeActionType actionType { get; set; }
+        public string actionName { get; set; }
+        public long index { get; set; }
+        public int count { get; set; }
+    }
 
     public class TreeBranch
     {
