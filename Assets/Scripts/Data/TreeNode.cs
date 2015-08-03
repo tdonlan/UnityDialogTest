@@ -27,22 +27,6 @@ using System.Text;
             }
         }
 
-        //need to pass in reference to the game to run these actions
-        public void runActions()
-        {
-            foreach (var action in actionList)
-            {
-                switch (action.actionType)
-                {
-                    case NodeActionType.AddItem:
-                            //add the item to player inventory
-                        break;
-                    default: 
-                        break;
-                }
-            }
-        }
-
         public List<TreeBranch> getBranchList(ITree t)
         {
 

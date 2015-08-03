@@ -89,6 +89,7 @@ public class DialogControllerScript : MonoBehaviour {
         DialogTreeNode currentNode = (DialogTreeNode)dialogTree.getNode(dialogTree.currentIndex);
         updateSpeakerBlock(currentNode);
         updateResponseBlock(currentNode);
+        updateAction(currentNode);
 
     }
 
@@ -108,7 +109,14 @@ public class DialogControllerScript : MonoBehaviour {
 
     }
 
-    
+    private void updateAction(DialogTreeNode currentNode)
+    {
+        if (currentNode.actionList != null)
+        {
+            gameDataObject.runActions(currentNode.actionList);
+        }
+    }
+
 
     private void updateResponseBlock(DialogTreeNode currentNode)
     {

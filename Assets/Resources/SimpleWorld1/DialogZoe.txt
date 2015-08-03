@@ -39,7 +39,9 @@ Stuff
 ----
 5
 Buy
-1;Zoe;Zoe;Yep, you can buy and sell goods at the blacksmith.  He's right down the way
+1;Zoe;Zoe;Yep, you can buy and sell goods at the blacksmith.  He's right down the way.  Here's some money!
+{}
+{AddItem;1;Gold;10}
 --
 3:What's the name of this town?
 4:What's there to do here?

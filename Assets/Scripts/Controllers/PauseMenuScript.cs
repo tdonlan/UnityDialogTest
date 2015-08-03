@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using Assets;
 
 public class PauseMenuScript : MonoBehaviour {
 
@@ -8,6 +9,9 @@ public class PauseMenuScript : MonoBehaviour {
     public RectTransform panelRectTransform;
     public Text ZoneInfoText;
     public Text GlobalFlagsText;
+
+    public GameObject InventoryTextGameObject;
+    public Text InventoryText;
 
 	// Use this for initialization
 	void Start () {
@@ -20,6 +24,7 @@ public class PauseMenuScript : MonoBehaviour {
 
         ZoneInfoText = GameObject.FindGameObjectWithTag("PauseZoneInfo").GetComponent<Text>();
         GlobalFlagsText = GameObject.FindGameObjectWithTag("PauseGlobalFlagInfo").GetComponent<Text>();
+        InventoryText = InventoryTextGameObject.GetComponent<Text>();
 
         panelRectTransform = gameObject.GetComponent<RectTransform>();
 
@@ -34,6 +39,7 @@ public class PauseMenuScript : MonoBehaviour {
     {
         ZoneInfoText.text = getZoneInfo();
         GlobalFlagsText.text = getGlobalFlags();
+        InventoryText.text = getInventory();
     }
 
     public void CloseMenu()
@@ -57,5 +63,17 @@ public class PauseMenuScript : MonoBehaviour {
             gfString += string.Format("{0} : {1} ({2})", flag.name, flag.value, flag.flagType.ToString());
         }
         return gfString;
+    }
+
+    private string getInventory()
+    {
+        string inventoryStr = "";
+        foreach (var l in gameDataObject.playerInventory)
+        {
+
+            Item item = gameDataObject.itemDictionary[l];
+            inventoryStr += item.name + "\n";
+        }
+        return inventoryStr;
     }
 }
