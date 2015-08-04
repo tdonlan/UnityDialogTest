@@ -25,13 +25,7 @@ public class GameDataObject : MonoBehaviour
         }
 
     private void loadItemList(){
-        itemDictionary = new Dictionary<long, Item>(); 
-        List<string> itemNameList = new List<string>() { "Rusty Sword", "Bent Key", "Golden Key", "Poison Arrows" };
-        foreach (var s in itemNameList)
-        {
-            Item tempItem = ItemFactory.getItem(s);
-            itemDictionary.Add(tempItem.index, tempItem);
-        }
+        itemDictionary = ItemFactory.getItemDictionary();
     }
 
         private void loadTreeStore()

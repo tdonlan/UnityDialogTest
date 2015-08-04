@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets;
 
 public class TreeInfoControllerScript : MonoBehaviour {
+
 
     public GameObject TreeInfoPanel;
     private RectTransform panelRectTransform;
@@ -20,6 +22,20 @@ public class TreeInfoControllerScript : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    public void UpdateInfo(GameDataObject gameObject, InfoTree infoTree)
+    {
+        if (infoTree != null)
+        {
+            InfoTreeNode infoNode = (InfoTreeNode)infoTree.getNode(infoTree.currentIndex);
+            infoNode.SelectNode(infoTree);
+            UIHelper.UpdateTextComponent(TreeInfoPanel, "TreeInfoTitle", infoNode.content.nodeName);
+            UIHelper.UpdateTextComponent(TreeInfoPanel, "TreeInfoText", infoNode.content.text);
+
+            gameObject.runActions(infoNode.actionList);
+        }
+
+    }
 
     public void ClosePanel()
     {

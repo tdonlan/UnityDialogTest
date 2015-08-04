@@ -71,6 +71,12 @@ public class BattleSceneController : MonoBehaviour {
 
     public void WinBattle()
     {
+        //Select win node, run actions
+        var winNode = battleTree.getWinNode();
+        winNode.SelectNode(battleTree);
+
+        gameDataObject.runActions(winNode.actionList);
+
             //Display the WinBattle Popup
         WinBattlePopupRectTransform.localPosition = new Vector3(0, 0, 0);
         

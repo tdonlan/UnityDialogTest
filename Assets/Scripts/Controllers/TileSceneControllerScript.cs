@@ -376,13 +376,9 @@ public class TileSceneControllerScript : MonoBehaviour {
     {
         //update the TreeInfoPanel
         InfoTree curInfoTree = (InfoTree)gameDataObject.treeStore.getTree(linkIndex);
-       
-        if (curInfoTree != null)
-        {
-            InfoTreeNode infoNode = (InfoTreeNode)curInfoTree.getNode(curInfoTree.currentIndex);
-            UIHelper.UpdateTextComponent(TreeInfoPanel,"TreeInfoTitle",infoNode.content.nodeName);
-             UIHelper.UpdateTextComponent(TreeInfoPanel,"TreeInfoText",infoNode.content.text);
-        }
+
+        TreeInfoControllerScript treeInfoScript = TreeInfoPanel.GetComponent<TreeInfoControllerScript>();
+        treeInfoScript.UpdateInfo(gameDataObject, curInfoTree);
 
 
         treeInfoPanelRectTransform.localPosition = new UnityEngine.Vector3(0, 0, 0);

@@ -305,10 +305,24 @@ using System.Text;
 
          }
 
+
          public bool checkNode(long index)
          {
              return treeNodeDictionary.ContainsKey(index);
          }
+
+         public BattleTreeNode getWinNode()
+         {
+             long winLink = treeNodeDictionary[currentIndex].getBranchList(this).Where(x => x.description.ToLower().Equals("win")).FirstOrDefault().linkIndex;
+             var node = treeNodeDictionary[winLink];
+             if (node.content.nodeType == BattleNodeType.Win)
+             {
+                 return node;
+             }
+             return null;
+         }
+
+ 
 
          public bool validateTreeLinks()
          {

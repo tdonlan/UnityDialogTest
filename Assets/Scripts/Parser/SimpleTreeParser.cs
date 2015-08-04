@@ -294,7 +294,7 @@ using UnityEngine;
             switch (infoNodeType)
             {
                 case InfoNodeType.Info:
-                    return new InfoNodeContent() { linkIndex = Int64.Parse(contentList[0]), nodeName = contentList[1], nodeType = infoNodeType, text = contentList[3], icon = contentList[4] };
+                    return new InfoNodeContent() { linkIndex = Int64.Parse(contentList[0]), nodeName = contentList[1], nodeType = infoNodeType, icon = contentList[3], text = contentList[4] };
                 default: return null;
             }
         }

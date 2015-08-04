@@ -37,6 +37,7 @@ Rust Sword
 7
 Win
 1;WinScreen;Win;You slaughter the diseased rats with a vengeance, leaving only smashed bundles of fur and blood;WinScreen
-{RatsKilled}
+{RatsKilled;QuestRat2}
+{AddItem;2;Gold Tooth;1}
 --
 ----
