@@ -33,7 +33,6 @@ public class PlayerControllerScript : MonoBehaviour {
         var box2d = this.gameObject.GetComponent<BoxCollider2D>();
         playerBounds = box2d.bounds;
 
-        tileSceneScript.displayBoundingRect(playerBounds);
     }
 
 

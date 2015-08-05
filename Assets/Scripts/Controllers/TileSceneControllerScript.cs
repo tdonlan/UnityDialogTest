@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 
 using Assets;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class TileSceneControllerScript : MonoBehaviour {
@@ -34,7 +35,6 @@ public class TileSceneControllerScript : MonoBehaviour {
 
     public string debugTextString;
     public Text debugText;
-    public Text debugText2;
     public Text panelText;
     public Button panelButton;
 
@@ -42,7 +42,8 @@ public class TileSceneControllerScript : MonoBehaviour {
     public PlayerControllerScript playerScript;
 
     public GameObject spritePrefab;
-    public List<GameObject> boundingSpriteList = new List<UnityEngine.GameObject>();
+
+    public List<GameObject> objectSpriteList = new List<GameObject>();
 
     Camera mainCamera;
 
@@ -82,16 +83,10 @@ public class TileSceneControllerScript : MonoBehaviour {
         loadTileMapData();
         loadTileSprites();
         setPlayerStart();
-
-        loadPauseMenu();
-
-        //testing
-        //TestDisplayTileArray();
     }
 
     private void loadTree()
     {
-        //gameDataObject.treeStore.SelectTree(1);
         zoneTree = (ZoneTree)gameDataObject.treeStore.getCurrentTree();
     }
 
@@ -102,10 +97,8 @@ public class TileSceneControllerScript : MonoBehaviour {
         player = GameObject.FindGameObjectWithTag("Player");
         playerScript = player.GetComponent<PlayerControllerScript>();
         debugText = GameObject.FindGameObjectWithTag("debugText").GetComponent<Text>();
-        debugText2 = GameObject.FindGameObjectWithTag("debugText2").GetComponent<Text>();
         panelText = GameObject.FindGameObjectWithTag("PanelText").GetComponent<Text>();
         panelButton = GameObject.FindGameObjectWithTag("PanelButton").GetComponent<Button>();
-        
         
         tileSelectPrefab = Resources.Load<GameObject>("Prefabs/TileSelectPrefab");
 
@@ -134,58 +127,36 @@ public class TileSceneControllerScript : MonoBehaviour {
 
     private void loadTileSprites()
     {
+        //clear all the object sprites
+        foreach (var sprite in objectSpriteList)
+        {
+            Destroy(sprite);
+        }
+        objectSpriteList.Clear();
+
+        //only load sprites that match zone flags
         for (int i = 0; i < tileMapData.objectBounds.Count; i++)
         {
-            ZoneTreeNode node = (ZoneTreeNode)zoneTree.getNode(i+1);
-            loadTileSprite(node.content.icon, tileMapData.objectBounds[i].center);
+            ZoneTreeNode node = (ZoneTreeNode)zoneTree.getNodeCheckingRootBranchList(i+1);
+            if (node != null)
+            {
+                objectSpriteList.Add(loadTileSprite(node.content.icon, tileMapData.objectBounds[i].center));
+            }
         }
     }
 
-    private void loadTileSprite(string spriteName, Vector3 pos)
+    private GameObject loadTileSprite(string spriteName, Vector3 pos)
     {
+        GameObject spriteObject = null;
         var spriteResource = Resources.Load<Sprite>("ZoneImage/"+spriteName);
         if(spriteResource != null){
-              var spriteObject = Instantiate(spritePrefab);
+               spriteObject = Instantiate(spritePrefab);
               spriteObject.transform.position = pos;
             var spriteObjectSprite = spriteObject.GetComponent<SpriteRenderer>();
             spriteObjectSprite.sprite = spriteResource;
         }
+        return spriteObject;
 
-    }
-
-
-    //Added manually to scene - remove?
-    private void loadPauseMenu()
-    {
-        GameObject pauseButton = Instantiate(pauseButtonPrefab);
-        var pauseButtonRect = pauseButton.GetComponent<RectTransform>();
-        pauseButtonRect.localPosition = new Vector3(0, 0, 0);
-        pauseButtonRect.SetParent(canvasRectTransform);
-
-        GameObject pauseMenu = Instantiate(pauseMenuPrefab);
-        var pauseMenuRect = pauseMenu.GetComponent<RectTransform>();
-        pauseButtonRect.localPosition = new Vector3(0, 1000, 0);
-        pauseMenuRect.SetParent(canvasRectTransform);
-
-    }
-
-    //TESTING
-    private void TestDisplayTileArray()
-    {
-        for (int y = 0; y < tileMapData.tileArray.GetLength(1); y++)
-        {
-            for (int x = 0; x < tileMapData.tileArray.GetLength(0); x++)
-            {
-                Tile t = tileMapData.tileArray[x,y];
-                if (!t.empty)
-                {
-                    var pos = new Vector3(t.x * Tile.TILE_SIZE, -t.y * Tile.TILE_SIZE, -5);
-                    var tileSprite = Instantiate(tileSelectPrefab);
-                    tileSprite.transform.position = pos;
-                }
-
-            }
-        }
     }
 
     private void setPlayerStart()
@@ -218,7 +189,6 @@ public class TileSceneControllerScript : MonoBehaviour {
             {
                 Vector3 newPos = getWorldPosFromTilePoint(new Point(movePath[0].x, -movePath[0].y));
                 playerScript.Move(newPos);
-               // player.transform.position = new Vector3(newPos.x, newPos.y, player.transform.position.z);
                 movePath.RemoveAt(0);
                 moveTimer = moveTime;
             }
@@ -281,38 +251,9 @@ public class TileSceneControllerScript : MonoBehaviour {
     }
     
 
-    public void setDebugText2(string text)
-    {
-        this.debugText2.text = text;
-    }
-
     public void setDebugText(string text)
     {
         this.debugText.text = text;
-    }
-
-    //display a sprite rectangle where bounds are
-    //testing
-    public void displayBoundingRect(Bounds b)
-    {
-        clearBoundingRect();
-        GameObject bSprite = Instantiate(spritePrefab);
-        bSprite.transform.position = b.center;
-        var sprite = bSprite.GetComponent<Sprite>();
-        var spriteRenderer = bSprite.GetComponent<SpriteRenderer>();
-        
-
-        boundingSpriteList.Add(bSprite);
-       
-    }
-
-    private void clearBoundingRect()
-    {
-        foreach(var b in boundingSpriteList)
-        {
-            Destroy(b);
-        }
-        boundingSpriteList.Clear();
     }
 
 
@@ -329,14 +270,11 @@ public class TileSceneControllerScript : MonoBehaviour {
                     panelText.text = currentNode.content.nodeName + " " + currentNode.content.description;
                     panelButton.enabled = true;
                 }
-                /*
-                //check condition here
-                //should use a helper in the Tree class, not drilling down into dictionary/TryGetValue method
-                if (zoneTree.treeNodeDictionary.TryGetValue(currentNodeIndex, out currentNode))
+                else
                 {
-                    panelText.text = currentNode.content.nodeName + " " + currentNode.content.description;
-                    panelButton.enabled = true;
-                }*/
+                    panelText.text = "";
+                    panelButton.enabled = false;
+                }
             }
             else
             {
@@ -352,24 +290,29 @@ public class TileSceneControllerScript : MonoBehaviour {
     public void ZoneNodeButtonClick()
     {
         zoneTree.SelectNode(currentNodeIndex);
-        switch (currentNode.content.nodeType)
+        if (currentNode != null)
         {
-            case ZoneNodeType.Link:
-                ClickLinkNode(currentNode.content.linkIndex);
-                break;
-            case ZoneNodeType.Dialog:
-                ClickDialogNode(currentNode.content.linkIndex);
-                break;
-            case ZoneNodeType.Battle:
-                ClickBattleNode(currentNode.content.linkIndex);
-                break; 
-            case ZoneNodeType.Info:
-                ClickInfoNode(currentNode.content.linkIndex);
-                break;
-            default:
-                break;
-                     
+
+            switch (currentNode.content.nodeType)
+            {
+                case ZoneNodeType.Link:
+                    ClickLinkNode(currentNode.content.linkIndex);
+                    break;
+                case ZoneNodeType.Dialog:
+                    ClickDialogNode(currentNode.content.linkIndex);
+                    break;
+                case ZoneNodeType.Battle:
+                    ClickBattleNode(currentNode.content.linkIndex);
+                    break;
+                case ZoneNodeType.Info:
+                    ClickInfoNode(currentNode.content.linkIndex);
+                    break;
+                default:
+                    break;
+
+            }
         }
+
     }
 
     private void ClickInfoNode(long linkIndex)
@@ -382,6 +325,8 @@ public class TileSceneControllerScript : MonoBehaviour {
 
 
         treeInfoPanelRectTransform.localPosition = new UnityEngine.Vector3(0, 0, 0);
+
+        loadTileSprites(); //update object sprites
     }
 
     private void ClickLinkNode(long linkIndex)
