@@ -385,7 +385,16 @@ using UnityEngine;
             var conditionList = ParseHelper.getSplitListInBlock(linkStr,";", "{", "}");
             foreach( var cond in conditionList)
             {
-                branchCondList.Add(new TreeBranchCondition(cond, "true", CompareType.Equal));
+                if (cond[0].Equals('!'))
+                {
+                    string fixedCond = cond.Remove(0, 1);
+                    branchCondList.Add(new TreeBranchCondition(fixedCond, "true", CompareType.NotEqual));
+                }
+                else
+                {
+                    branchCondList.Add(new TreeBranchCondition(cond, "true", CompareType.Equal));
+                }
+              
             }
 
             return branchCondList;

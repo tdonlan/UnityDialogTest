@@ -71,7 +71,7 @@ using System.Text;
   
     }
 
-     public class ZoneTree : ITree
+    public class ZoneTree : ITree
     {
         public string treeName { get; set; }
         public long treeIndex { get; set; }
@@ -90,11 +90,26 @@ using System.Text;
             this.treeType = treeType;
         }
 
-            public ITreeNode getNode(long index)
+        public ITreeNode getNode(long index)
         {
-            if(treeNodeDictionary.ContainsKey(index))
+            if (treeNodeDictionary.ContainsKey(index))
             {
                 return treeNodeDictionary[index];
+            }
+            return null;
+        }
+
+        //returns the ZoneTreeNode if its in the root branch list and meets conditions
+        public ITreeNode getNodeCheckingRootBranchList(long index)
+        {
+            var rootNode = treeNodeDictionary[1];
+            if (index == 1)
+            {
+                return rootNode; //always return the root node (entrance to the zone)
+            }
+            if (rootNode.getBranchList(this).Find(x => x.linkIndex == index) != null)
+            {
+                return getNode(index);
             }
             return null;
         }
@@ -134,9 +149,9 @@ using System.Text;
             return validLinks;
         }
 
-      
 
-     }
+
+    }
 
 
 

@@ -47,6 +47,8 @@ using System.Text;
                     {
                         case CompareType.Equal:
                             return checkFlag_BoolEqual(compareValue);
+                        case CompareType.NotEqual:
+                            return checkFlag_BoolNotEqual(compareValue);
                         default: return false;
                     }
                 case FlagType.intFlag:
@@ -86,6 +88,11 @@ using System.Text;
         private bool checkFlag_BoolEqual(string strBool)
         {
             return bool.Parse(this.value) == bool.Parse(strBool);
+        }
+
+        private bool checkFlag_BoolNotEqual(string strBool)
+        {
+            return bool.Parse(this.value) != bool.Parse(strBool);
         }
 
         private bool checkFlag_StringEqual(string str)
@@ -149,12 +156,22 @@ using System.Text;
         public bool checkFlag(string flagName, string compareValue, CompareType compareType)
         {
            var flag = getFlag(flagName);
-           if (flag != null)
+           if (compareType != CompareType.NotEqual)
            {
-               return flag.checkFlag(compareValue, compareType);
+               if (flag != null)
+               {
+                   return flag.checkFlag(compareValue, compareType);
+               }
+               return false;
            }
-           return false;
-
+           else
+           {
+               if (flag != null)
+               {
+                   return flag.checkFlag(compareValue, compareType);
+               }
+               return true; //null is != the flag, so return true
+           }
         }
 
         public void updateFlag(string flagName, string value)

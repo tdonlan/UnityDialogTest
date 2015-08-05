@@ -128,14 +128,8 @@ public class TileSceneControllerScript : MonoBehaviour {
 
     private void loadTileMapData()
     {
-        string outStr = "";
-        //var tileMapObject = GameObject.FindGameObjectWithTag("tileMap");
         tileMapData = new TileMapData(tileMapObject);
-        foreach (var b in tileMapData.collisionBoundsList)
-        {
-            outStr += b + "\n";
-            displayBoundingRect(b);
-        }
+  
     }
 
     private void loadTileSprites()
@@ -149,7 +143,6 @@ public class TileSceneControllerScript : MonoBehaviour {
 
     private void loadTileSprite(string spriteName, Vector3 pos)
     {
-
         var spriteResource = Resources.Load<Sprite>("ZoneImage/"+spriteName);
         if(spriteResource != null){
               var spriteObject = Instantiate(spritePrefab);
@@ -330,13 +323,20 @@ public class TileSceneControllerScript : MonoBehaviour {
             currentNodeIndex = tileMapData.checkObjectCollision(playerBounds) + 1;
             if (currentNodeIndex > 0)
             {
+                currentNode = (ZoneTreeNode)zoneTree.getNodeCheckingRootBranchList(currentNodeIndex);
+                if (currentNode != null)
+                {
+                    panelText.text = currentNode.content.nodeName + " " + currentNode.content.description;
+                    panelButton.enabled = true;
+                }
+                /*
                 //check condition here
                 //should use a helper in the Tree class, not drilling down into dictionary/TryGetValue method
                 if (zoneTree.treeNodeDictionary.TryGetValue(currentNodeIndex, out currentNode))
                 {
                     panelText.text = currentNode.content.nodeName + " " + currentNode.content.description;
                     panelButton.enabled = true;
-                }
+                }*/
             }
             else
             {

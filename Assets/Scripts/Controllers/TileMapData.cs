@@ -21,11 +21,21 @@ namespace Assets
         }
     }
 
+    public class ZoneObjectBounds
+    {
+        public Bounds bounds;
+        public bool isActive;
+        public long index;
+            
+    }
+
     public class TileMapData
     {
         public List<Bounds> collisionBoundsList = new List<Bounds>();
         public Bounds spawnBounds;
         public List<Bounds> objectBounds = new List<Bounds>();
+
+        public List<ZoneObjectBounds> objectBoundsList = new List<ZoneObjectBounds>();
 
         public Tile[,] tileArray;
 
@@ -77,6 +87,11 @@ namespace Assets
                     objectBounds.Add(box.bounds);
                 }
             }
+
+        }
+
+        private void loadObjectBoundList(GameObject tileMapGameObject)
+        {
 
         }
 

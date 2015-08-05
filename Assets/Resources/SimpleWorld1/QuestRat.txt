@@ -1,0 +1,5 @@
+﻿1
+A Secret of the Rats!
+3;Clearing in the Woods;Link;The forest opens up to a clearing of old and ruins.;Forest;-300;-100
+--
+----
