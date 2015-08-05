@@ -130,7 +130,7 @@ public class WorldControllerScript : MonoBehaviour {
         //switch scenes to the zone index
         //Application.LoadLevel(2); //old zone scene
         gameDataObject.treeStore.SelectTree(linkIndex);
-        Application.LoadLevel(4); //tiled zone scene
+        Application.LoadLevel((int)UnitySceneIndex.Zone); //tiled zone scene
     }
 	
 

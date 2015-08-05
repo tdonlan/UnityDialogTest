@@ -11,27 +11,6 @@ using UnityEngine;
     public class SimpleTreeParser
     {
 
-        public static TreeStore LoadTreeStoreFromManifest(string manifest)
-        {
-            TreeStore ts = new TreeStore();
-
-            GlobalFlags gf = new GlobalFlags();
-            //load the manifest
-            string manifestStr = File.ReadAllText(manifest);
-
-            var manifestJSON = SimpleJson.SimpleJson.DeserializeObject<List<TreeManifestItem>>(manifestStr);
-
-            foreach (var treeItem in manifestJSON)
-            {
-                string path = ParseHelper.getFullPath(manifest, treeItem.treePath);
-                ITree tempTree = SimpleTreeParser.getTreeFromFile(path, treeItem.treeType, gf);
-                ts.treeDictionary.Add(treeItem.treeIndex, tempTree);
-            }
-
-            return ts;
-        }
-
-        
         //Load the tree store from a simple file list (not json)
         public static TreeStore LoadTreeStoreFromSimpleManifest(string manifestSimple)
         {

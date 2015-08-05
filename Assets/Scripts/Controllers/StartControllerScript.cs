@@ -20,7 +20,7 @@ public class StartControllerScript : MonoBehaviour {
 
     public void EnterWorld()
     {
-        Application.LoadLevel(1);
+        Application.LoadLevel((int)UnitySceneIndex.World);
     }
 	
 	// Update is called once per frame

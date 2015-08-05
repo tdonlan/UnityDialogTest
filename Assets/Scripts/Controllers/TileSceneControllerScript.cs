@@ -6,7 +6,6 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 
 using Assets;
-using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class TileSceneControllerScript : MonoBehaviour {
@@ -340,22 +339,22 @@ public class TileSceneControllerScript : MonoBehaviour {
         gameDataObject.treeStore.SelectTree(linkIndex);
         if (gameDataObject.treeStore.getCurrentTree() is WorldTree)
         {
-            Application.LoadLevel(1);
+            Application.LoadLevel((int)UnitySceneIndex.World);
         }
         else
         {
-            Application.LoadLevel(4);
+            Application.LoadLevel((int)UnitySceneIndex.Zone);
         }
     }
 
     private void ClickDialogNode(long dialogIndex)
     {
-        Application.LoadLevel(3);
+        Application.LoadLevel((int)UnitySceneIndex.Dialog);
     }
 
     private void ClickBattleNode(long battleIndex)
     {
-        Application.LoadLevel(5);
+        Application.LoadLevel((int)UnitySceneIndex.Battle);
     }
 
 

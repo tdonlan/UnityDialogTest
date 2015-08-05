@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+public enum UnitySceneIndex
+{
+    Start=0,
+    World=1,
+    Zone=2,
+    Dialog=3,
+    Battle=4
+}
 
     public enum TreeType
     {

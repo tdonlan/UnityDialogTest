@@ -88,6 +88,6 @@ public class BattleSceneController : MonoBehaviour {
         gameDataObject.treeStore.SelectTree(parentTreeLink);
 
         //go back to the zone view
-        Application.LoadLevel(4);
+        Application.LoadLevel((int)UnitySceneIndex.Zone);
     }
 }
