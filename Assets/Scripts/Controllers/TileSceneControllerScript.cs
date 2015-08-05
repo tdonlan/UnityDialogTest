@@ -267,6 +267,12 @@ public class TileSceneControllerScript : MonoBehaviour {
                 currentNode = (ZoneTreeNode)zoneTree.getNodeCheckingRootBranchList(currentNodeIndex);
                 if (currentNode != null)
                 {
+                    //Enter battles automatically
+                    if (currentNode.content.nodeType == ZoneNodeType.Battle)
+                    {
+                        ZoneNodeButtonClick();
+                    }
+  
                     panelText.text = currentNode.content.nodeName + " " + currentNode.content.description;
                     panelButton.enabled = true;
                 }
