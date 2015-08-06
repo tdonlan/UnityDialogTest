@@ -270,29 +270,37 @@ using System.Text;
                 QuestTreeNode rootNode = (QuestTreeNode)getNode(1);
                 questStrList.Add(rootNode.name); //quest title
 
-                questStrList.AddRange(getQuestDisplayTree(1,questStrList));
+                questStrList.AddRange(getQuestDisplayTree());
             }
             return questStrList;
          }
 
-         private List<string> getQuestDisplayTree(long nodeIndex, List<string> questStrList)
+         //-iterate through list first, adding all complete nodes
+        //-iterate through again, adding branch names (from complete nodes) pointing to incomplete nodes
+         private List<string> getQuestDisplayTree()
          {
-             QuestTreeNode rootNode = (QuestTreeNode)getNode(nodeIndex);
-             questStrList.Add(rootNode.content.description);
-             foreach (var branch in rootNode.branchList)
+             List<string> questStrList = new List<string>();
+             foreach (QuestTreeNode node in treeNodeDictionary.Values)
              {
-                 QuestTreeNode branchNode = (QuestTreeNode)getNode(branch.linkIndex);
-                 if (globalFlags.checkFlag(branchNode.content.flagName, "true", CompareType.Equal))
+                 if (globalFlags.checkFlag(node.content.flagName, "true", CompareType.Equal))
                  {
-                     questStrList.AddRange(getQuestDisplayTree(branch.linkIndex, questStrList));
+                     questStrList.Add("X-" + node.content.description);
+
+                     foreach (var branch in node.branchList)
+                     {
+                         QuestTreeNode branchNode = (QuestTreeNode)getNode(branch.linkIndex);
+                         if (!globalFlags.checkFlag(branchNode.content.flagName, "true", CompareType.Equal))
+                         {
+                             questStrList.Add("--" + branch.description);
+                         }
+                     }
                  }
-                 else
-                 {
-                     questStrList.Add(branch.description);
-                 }
+                 
              }
              return questStrList;
          }
+
+        
 
 
          public bool validateTreeLinks()
