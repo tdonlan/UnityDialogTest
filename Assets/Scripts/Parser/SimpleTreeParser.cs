@@ -236,7 +236,7 @@ using UnityEngine;
                 case TreeType.Dialog:
                     return new DialogNodeContent() {linkIndex = Int64.Parse(contentList[0]), speaker=contentList[1],portrait=contentList[2], text=contentList[3] };
                 case TreeType.Quest:
-                    return new QuestNodeContent() {content=contentStr };
+                    return new QuestNodeContent() { flagName = contentList[0], description = contentList[1] };
                 case TreeType.Battle:
                     return getBattleNodeContentFromStr(contentStr);
                 case TreeType.Info:

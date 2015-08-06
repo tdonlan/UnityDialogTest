@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using Assets;
+using System.Collections.Generic;
 
 public class PauseMenuScript : MonoBehaviour {
 
@@ -38,7 +39,8 @@ public class PauseMenuScript : MonoBehaviour {
     public void UpdateData()
     {
         ZoneInfoText.text = getZoneInfo();
-        GlobalFlagsText.text = getGlobalFlags();
+        //GlobalFlagsText.text = getGlobalFlags();
+        GlobalFlagsText.text = getQuestView();
         InventoryText.text = getInventory();
     }
 
@@ -63,6 +65,25 @@ public class PauseMenuScript : MonoBehaviour {
             gfString += string.Format("{0} : {1} ({2})", flag.name, flag.value, flag.flagType.ToString());
         }
         return gfString;
+    }
+
+    private string getQuestView()
+    {
+        //get quests that are flagged active (we have the flag matching the name of quest tree)
+        string output = "";
+            
+
+        List<List<string>> questStrLists = gameDataObject.treeStore.getQuestStringLists();
+
+        if (questStrLists.Count > 0)
+        {
+            foreach(var str in questStrLists[0]){
+                output+= str + "\n";
+            }
+        }
+
+        return output;
+
     }
 
     private string getInventory()

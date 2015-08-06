@@ -53,7 +53,7 @@ Buy
 6
 Danger
 1;Zoe;Zoe;Well, the alley has been infested with rats for as long as I can remember.  Can you kill them?
-{QuestRat1}
+{QuestRat}
 --
 3:What's the name of this town?
 4:What's there to do here?

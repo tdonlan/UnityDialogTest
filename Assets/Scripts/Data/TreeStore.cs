@@ -50,5 +50,25 @@ using System.IO;
             }
         }
 
+        //iterate through all trees, return those that have valid quest string lists
+        public List<List<string>> getQuestStringLists()
+        {
+            List<List<string>> questStrLists = new List<List<string>>();
+            foreach (var tree in treeDictionary.Values)
+            {
+                if (tree is QuestTree)
+                {
+
+                    var questStrList = ((QuestTree)tree).getQuestDisplay();
+                    if (questStrList.Count > 0)
+                    {
+                        questStrLists.Add(questStrList);
+                    }
+                }
+            }
+
+            return questStrLists;
+        }
+
 
     }

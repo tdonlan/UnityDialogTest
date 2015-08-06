@@ -268,7 +268,8 @@ using System.Text;
 
     public class QuestNodeContent : ITreeNodeContent
     {
-        public string content { get; set; }
+        public string flagName { get; set; }
+        public string description { get; set; }
     }
 
     public class BattleNodeContent : ITreeNodeContent

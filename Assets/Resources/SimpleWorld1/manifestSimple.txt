@@ -7,3 +7,4 @@ SimpleWorld1/DialogHermit;2;DialogHermit;5
 SimpleWorld1/ZoneDesert;1;CollisionTest;6
 SimpleWorld1/BattleRats;4;BattleRats;7
 SimpleWorld1/InfoForestChest;5;InfoForestChest;8
+SimpleWorld1/QuestRat;3;QuestRat;9

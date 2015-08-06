@@ -261,6 +261,40 @@ using System.Text;
              return treeNodeDictionary.ContainsKey(index);
          }
 
+         //return a string list of the quest, given the current global flags 
+         //classic tree traversal, checking conditions
+         public List<string> getQuestDisplay() { 
+
+             List<string> questStrList = new List<string>();
+            if(globalFlags.checkFlag(treeName,"true",CompareType.Equal)){
+                QuestTreeNode rootNode = (QuestTreeNode)getNode(1);
+                questStrList.Add(rootNode.name); //quest title
+
+                questStrList.AddRange(getQuestDisplayTree(1,questStrList));
+            }
+            return questStrList;
+         }
+
+         private List<string> getQuestDisplayTree(long nodeIndex, List<string> questStrList)
+         {
+             QuestTreeNode rootNode = (QuestTreeNode)getNode(nodeIndex);
+             questStrList.Add(rootNode.content.description);
+             foreach (var branch in rootNode.branchList)
+             {
+                 QuestTreeNode branchNode = (QuestTreeNode)getNode(branch.linkIndex);
+                 if (globalFlags.checkFlag(branchNode.content.flagName, "true", CompareType.Equal))
+                 {
+                     questStrList.AddRange(getQuestDisplayTree(branch.linkIndex, questStrList));
+                 }
+                 else
+                 {
+                     questStrList.Add(branch.description);
+                 }
+             }
+             return questStrList;
+         }
+
+
          public bool validateTreeLinks()
          {
              bool validLinks = true;
